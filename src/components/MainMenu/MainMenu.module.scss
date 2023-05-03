@@ -1,0 +1,30 @@
+@import '@/styles/_colors.scss';
+@import '@/styles/_typographys.scss';
+
+.mainMenuContent {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-auto-columns: minmax(0, max-content);
+
+  align-items: center;
+  padding: 34px 100px;
+  gap: 6.375rem;
+
+  width: 100vw;
+  height: 118px;
+
+  background: $gray-yellow-900;
+
+}
+
+.buttonsContent {
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  grid-column: 3;
+  padding: 0px;
+  gap: 1.5rem;
+
+}
