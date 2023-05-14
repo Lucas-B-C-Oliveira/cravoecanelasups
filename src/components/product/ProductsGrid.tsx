@@ -1,6 +1,7 @@
-import { Product } from '@/types'
-import { ProductComponent } from './ProductComponent'
+import { ProductData } from '@/types'
+
 import { env } from '@/utils/env'
+import { Product } from './Product'
 
 interface Props {
   collectionHandle: string
@@ -17,22 +18,28 @@ export async function ProductsGrid({
   )
 
   const products = await response.json()
-
+  // w - [66rem]
   return (
-    <>
-      {products &&
-        products.map((product: Product) => {
-          return (
-            /* @ts-expect-error -> Async Server Component */
-            <ProductComponent
-              productData={product}
-              showAddToCartButton={collectionHandle === 'mais-vendidos'}
-              showBuyNowButton={collectionHandle === 'mais-vendidos'}
-              showLearnMoreButton
-              key={product.id}
-            />
-          )
-        })}
-    </>
+    <div
+      className={`
+        w-full 
+        2xl:px-28 
+      `}
+    >
+      <div
+        className={`
+        grid grid-cols-4 gap-x-6 w-full 
+        2xl:px-28 
+      `}
+      >
+        {products &&
+          products.map((product: ProductData) => {
+            return (
+              /* @ts-expect-error -> Async Server Component */
+              <Product productData={product} key={product.id} />
+            )
+          })}
+      </div>
+    </div>
   )
 }
