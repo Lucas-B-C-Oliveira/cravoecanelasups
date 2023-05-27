@@ -1,4 +1,4 @@
-import { Product } from '@/types'
+import { ProductData } from '@/types'
 import { getUrlParams } from '@/utils/ApiFunctions'
 import { queryGetProductByHandle } from '@/utils/graphql/querys'
 import { query } from '@/utils/shopify/storefrontApi'
@@ -16,7 +16,7 @@ export async function GET(request: Request) {
   const { nodes } = variants
   const variant = nodes[0]
 
-  const newProduct: Product = {
+  const newProduct: ProductData = {
     title,
     id,
     handle,

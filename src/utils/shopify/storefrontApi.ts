@@ -6,9 +6,19 @@ const defaultRequestData: RequestInit = {
   headers: {
     'Content-Type': 'application/json',
     'X-Shopify-Storefront-Access-Token':
-      env.SHOPIFY_APPLICATION_STOREFRONT_ACCESS_TOKEN,
+      env.private.SHOPIFY_APPLICATION_STOREFRONT_ACCESS_TOKEN,
   },
-  cache: 'no-cache',
+  cache: 'no-cache', //! TODO: Check this out
+}
+
+const defaultRequestDataClient: RequestInit = {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'X-Shopify-Storefront-Access-Token':
+      env.private.SHOPIFY_APPLICATION_STOREFRONT_ACCESS_TOKEN, //! TODO: Check this out
+  },
+  cache: 'no-cache', //! TODO: Check this out
 }
 
 function defaultRequestDataWithCustomerToken(accessToken: string): RequestInit {
@@ -17,10 +27,10 @@ function defaultRequestDataWithCustomerToken(accessToken: string): RequestInit {
     headers: {
       'Content-Type': 'application/json',
       'X-Shopify-Storefront-Access-Token':
-        env.SHOPIFY_APPLICATION_STOREFRONT_ACCESS_TOKEN,
+        env.private.SHOPIFY_APPLICATION_STOREFRONT_ACCESS_TOKEN,
       'X-Shopify-Customer-Access-Token': `${accessToken}`,
     },
-    cache: 'no-cache',
+    cache: 'no-cache', //! TODO: Check this out
   }
 }
 
@@ -28,7 +38,8 @@ export async function customerQuery(query: string, accessToken: string) {
   const requestData = defaultRequestDataWithCustomerToken(accessToken)
 
   const result = await fetch(
-    env.SHOPIFY_APPLICATION_PATH + env.SHOPIFY_STOREFRONT_GRAPHQL_API_PATH,
+    env.public.SHOPIFY_APPLICATION_PATH +
+      env.public.SHOPIFY_STOREFRONT_GRAPHQL_API_PATH,
     {
       ...requestData,
       body: JSON.stringify({ query }),
@@ -48,9 +59,31 @@ export async function customerQuery(query: string, accessToken: string) {
 
 export async function query(query: string) {
   const result = await fetch(
-    env.SHOPIFY_APPLICATION_PATH + env.SHOPIFY_STOREFRONT_GRAPHQL_API_PATH,
+    env.public.SHOPIFY_APPLICATION_PATH +
+      env.public.SHOPIFY_STOREFRONT_GRAPHQL_API_PATH,
     {
       ...defaultRequestData,
+      body: JSON.stringify({ query }),
+    },
+  )
+
+  const jsonResult = await result.json()
+
+  if (jsonResult.errors) {
+    return new Error(jsonResult.errors[0].message)
+  }
+
+  return await new Promise((resolve) => {
+    resolve(jsonResult.data)
+  })
+}
+
+export async function queryClient(query: string) {
+  const result = await fetch(
+    env.public.SHOPIFY_APPLICATION_PATH +
+      env.public.SHOPIFY_STOREFRONT_GRAPHQL_API_PATH,
+    {
+      ...defaultRequestDataClient,
       body: JSON.stringify({ query }),
     },
   )
@@ -79,7 +112,8 @@ export async function customerMutation(
   }
 
   const result = await fetch(
-    env.SHOPIFY_APPLICATION_PATH + env.SHOPIFY_STOREFRONT_GRAPHQL_API_PATH,
+    env.public.SHOPIFY_APPLICATION_PATH +
+      env.public.SHOPIFY_STOREFRONT_GRAPHQL_API_PATH,
     {
       ...requestData,
       body: JSON.stringify(data),
@@ -104,7 +138,8 @@ export async function mutation(query: string, variables: any) {
   }
 
   const result = await fetch(
-    env.SHOPIFY_APPLICATION_PATH + env.SHOPIFY_STOREFRONT_GRAPHQL_API_PATH,
+    env.public.SHOPIFY_APPLICATION_PATH +
+      env.public.SHOPIFY_STOREFRONT_GRAPHQL_API_PATH,
     {
       ...defaultRequestData,
       body: JSON.stringify(data),

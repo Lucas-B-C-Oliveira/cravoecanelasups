@@ -1,7 +1,8 @@
 import { ProductData } from '@/types'
 
-import { env } from '@/utils/env'
 import { Product } from './Product'
+import { query } from '@/utils/shopify/storefrontApi'
+import { queryGetProductsByCollectionHandle } from '@/utils/graphql/querys'
 
 interface Props {
   collectionHandle: string
@@ -10,36 +11,57 @@ interface Props {
 export async function ProductsGrid({
   collectionHandle = 'mais-vendidos',
 }: Props) {
-  const response = await fetch(
-    `${env.APPLICATION_PATH}${env.APPLICATION_API_PATH}/get-products-by-collection-handle?collectionHandle=${collectionHandle}`,
-    {
-      cache: 'no-store', //! TODO: Use the correct cache
-    },
+  const queryResult = await query(
+    queryGetProductsByCollectionHandle(collectionHandle),
   )
 
-  const products = await response.json()
-  // w - [66rem]
+  const { nodes } = queryResult.collection.products
+
+  const products: ProductData[] = nodes.map((product: ProductData) => {
+    const { url, altText } = product.featuredImage
+
+    return {
+      id: product.id,
+      title: product.title,
+      handle: product.handle,
+      description: product.description,
+      currencyCode: product.priceRange.minVariantPrice.currencyCode,
+      currencySymbol: 'R$',
+      altText: `${altText}`,
+      image: url,
+      price: product.priceRange.minVariantPrice.amount,
+      options: product.options,
+    }
+  })
+
   return (
     <div
       className={`
-        w-full 
-        2xl:px-28 
+      flex
+      justify-center
       `}
     >
-      <div
+      <ul
+        role="list"
         className={`
-        grid grid-cols-4 gap-x-6 w-full 
-        2xl:px-28 
+
+      flex flex-auto flex-row gap-6  flex-wrap justify-center
+        
       `}
       >
         {products &&
           products.map((product: ProductData) => {
             return (
-              /* @ts-expect-error -> Async Server Component */
-              <Product productData={product} key={product.id} />
+              <li
+                key={product.id}
+                className="col-span-1 flex flex-col divide-y"
+              >
+                {/* @ts-expect-error -> Async Server Component */}
+                <Product productData={product} />
+              </li>
             )
           })}
-      </div>
+      </ul>
     </div>
   )
 }

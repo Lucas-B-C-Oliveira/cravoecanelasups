@@ -5,14 +5,15 @@ const defaultRequestData: RequestInit = {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
-    'X-Shopify-Access-Token': env.SHOPIFY_APPLICATION_ADMIN_ACCESS_TOKEN,
+    'X-Shopify-Access-Token':
+      env.private.SHOPIFY_APPLICATION_ADMIN_ACCESS_TOKEN,
   },
   cache: 'no-cache',
 }
 
 export async function queryAdmin(query: string) {
   const result = await fetch(
-    `${env.SHOPIFY_APPLICATION_PATH}${env.SHOPIFY_ADMIN_GRAPHQL_API_PATH}`,
+    `${env.public.SHOPIFY_APPLICATION_PATH}${env.public.SHOPIFY_ADMIN_GRAPHQL_API_PATH}`,
     {
       ...defaultRequestData,
       body: JSON.stringify({ query }),
@@ -37,7 +38,7 @@ export async function mutationAdmin(query: string, variables: any) {
   }
 
   const result = await fetch(
-    `${env.SHOPIFY_APPLICATION_PATH}${env.SHOPIFY_ADMIN_GRAPHQL_API_PATH}`,
+    `${env.public.SHOPIFY_APPLICATION_PATH}${env.public.SHOPIFY_ADMIN_GRAPHQL_API_PATH}`,
     {
       ...defaultRequestData,
       body: JSON.stringify(data),

@@ -52,6 +52,16 @@ export function queryGetProductByHandle(handle: string) {
         title
         description
         handle
+        options {
+          name
+          values
+        }
+        priceRange {
+          minVariantPrice {
+            amount
+            currencyCode
+          }
+        }
         variants(first: 40) {
           nodes {
             id
@@ -88,20 +98,15 @@ export function queryGetProductsByCollectionHandle(
         id
         title
         handle
-        variants(first: ${firstProducts}) {
-          nodes {
-            id
-            price {
-							amount
-							currencyCode
-						}
-          }
-        }
         description
-        images(first: 10) {
-          nodes {
-            altText
-            url
+        options {
+          name
+          values
+        }
+        priceRange {
+          minVariantPrice {
+            amount
+            currencyCode
           }
         }
         featuredImage {
@@ -131,21 +136,62 @@ export function queryGetEmailIfCustomerExistsByEmail(email: string) {
 export function queryGetCustomerAddressByToken(token: string) {
   return ` query {
       customer(customerAccessToken: "${token}") {
-        firstName
-        lastName
-        email
-        defaultAddress {
-          firstName
-          lastName
-          address1
-          address2
-          city
-          province
-          zip
-          country
-          phone
+      id
+      displayName
+      email
+      defaultAddress {
+        zip
+        name
+        address1
+        address2
+        city
+        id
+        country
+        phone
+        provinceCode
+        id
+      }
+      addresses(first: 10) {
+          nodes {
+            zip
+            name
+            address1
+            address2
+            city
+            id
+            country
+            phone
+            provinceCode
+            id
+          }
         }
       }
     }
+  `
+}
+
+export function queryMetaObjectByType(type: string) {
+  return `
+  {
+    metaobjectDefinitionByType(type: "${type}") {
+      metaobjects(first: 1) {
+        nodes {
+          fields {
+            key
+            value
+            references(first: 30) {
+              nodes {
+                ... on MediaImage {
+                  image {
+                    url
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  } 
   `
 }

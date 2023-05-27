@@ -1,11 +1,11 @@
 'use client'
 
 import { useGlobalStore } from '@/store/store'
-import { Product } from '@/types'
+import { ProductData } from '@/types'
 // import { setCookie } from 'nookies'
 
 interface Props {
-  productData: Product
+  productData: ProductData
 }
 
 export function AddToCartInProductPage({ productData }: Props) {

@@ -1,4 +1,4 @@
-import { Product } from '@/types'
+import { ProductData } from '@/types'
 import { getUrlParams } from '@/utils/ApiFunctions'
 import { queryGetProductsByCollectionHandle } from '@/utils/graphql/querys'
 import { query } from '@/utils/shopify/storefrontApi'
@@ -13,7 +13,7 @@ export async function GET(request: Request) {
 
   const { nodes } = queryResult.collection.products
 
-  const products: Product[] = nodes.map((product: Product) => {
+  const products: ProductData[] = nodes.map((product: ProductData) => {
     const { url, altText } = product.featuredImage
 
     return {

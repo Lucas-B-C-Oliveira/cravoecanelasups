@@ -12,16 +12,7 @@ export async function GET(req: NextApiRequest, res: NextResponse) {
     accessToken,
   )
 
-  const deliveryAddress = {
-    email: '',
-    defaultAddress: {},
-  }
-
   const { customer } = queryResponse
-  const { defaultAddress } = customer
 
-  deliveryAddress.email = customer.email
-  deliveryAddress.defaultAddress = defaultAddress
-
-  return NextResponse.json(deliveryAddress)
+  return NextResponse.json(customer)
 }

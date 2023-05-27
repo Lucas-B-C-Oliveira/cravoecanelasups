@@ -1,8 +1,17 @@
 import Image from 'next/image'
 import LogoSvg from '../assets/Logo.svg'
+import Link from 'next/link'
 
-import styles from './LogoMain.module.scss'
+export async function LogoMainMenu() {
+  const logoUrl = await fetch('').catch(() => LogoSvg)
 
-export function LogoMainMenu() {
-  return <Image className={styles.imgContent} src={LogoSvg} alt="" />
+  return (
+    <Link href="/">
+      <Image
+        className="inline-block w-auto h-auto max-w-[98px] max-h-[50px] self-start"
+        src={logoUrl}
+        alt=""
+      />
+    </Link>
+  )
 }

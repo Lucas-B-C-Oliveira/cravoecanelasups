@@ -1,4 +1,4 @@
-import { type Order, type Product, type ProductsToBeOrdered } from '@/types'
+import { type Order, type ProductData, type ProductsToBeOrdered } from '@/types'
 import { type NextRequest, NextResponse } from 'next/server'
 
 export async function POST(req: NextRequest) {
@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
 }
 
 function addProdutsToCart(
-  productData: Product | ProductsToBeOrdered,
+  productData: ProductData | ProductsToBeOrdered,
   currentOrder: Order,
   amountToAdd: number,
 ): Order {
@@ -50,7 +50,7 @@ function addNewProductToEmptyCar(
     id,
     variantId,
     currencyCode,
-  }: Product | ProductsToBeOrdered,
+  }: ProductData | ProductsToBeOrdered,
   amountToAdd: number,
 ): Order {
   const newProduct = {
@@ -136,7 +136,7 @@ function addProductThatIsNotInTheCart(
     id,
     variantId,
     currencyCode,
-  }: Product | ProductsToBeOrdered,
+  }: ProductData | ProductsToBeOrdered,
   productsInOrder: ProductsToBeOrdered[],
   amountToAdd: number,
 ): Order {

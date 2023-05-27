@@ -1,14 +1,14 @@
-export interface Product {
+export interface ProductData {
   title: string
   price: string
   image: string
-  variantId: string
   description: string
   handle: string
   id: string
   currencySymbol: string
   currencyCode: string
   altText: string
+  options: any[]
 }
 
 export interface PriceRange {

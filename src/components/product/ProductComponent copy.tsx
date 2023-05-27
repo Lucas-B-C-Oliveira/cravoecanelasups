@@ -1,9 +1,9 @@
 import Image from 'next/image'
 import { AddToCartInGrid, BuyNow, LearnMore } from '../buttons'
-import { Product } from '@/types'
+import { ProductData } from '@/types'
 
 interface Props {
-  productData: Product
+  productData: ProductData
   showBuyNowButton: boolean
   showAddToCartButton: boolean
   showLearnMoreButton: boolean

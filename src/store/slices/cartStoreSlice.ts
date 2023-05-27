@@ -1,17 +1,17 @@
 import { StateCreator } from 'zustand'
 import { type ProductsToBeOrdered, type Cart, type Order } from '@/types/cart'
-import { Product } from '@/types/product'
+import { ProductData } from '@/types/product'
 import { api } from '@/utils/lib/axios'
 // import { env } from '@/utils/env'
 
 export interface CartSliceState extends Cart {
   order: Order
   addProductToCart: (
-    productData: Product | ProductsToBeOrdered,
+    productData: ProductData | ProductsToBeOrdered,
     amountToAdd?: number,
   ) => Promise<Order>
   removeProductFromCart: (
-    productData: Product | ProductsToBeOrdered,
+    productData: ProductData | ProductsToBeOrdered,
     amountToRemove?: number,
   ) => Promise<Order>
 }
@@ -26,7 +26,7 @@ export const cartSlice: StateCreator<CartSliceState> = (set, get) => ({
   },
 
   addProductToCart: async (
-    productData: Product | ProductsToBeOrdered,
+    productData: ProductData | ProductsToBeOrdered,
     amountToAdd: number = 1,
   ) => {
     const currentOrder = get().order
@@ -44,7 +44,7 @@ export const cartSlice: StateCreator<CartSliceState> = (set, get) => ({
   },
 
   removeProductFromCart: async (
-    productData: Product | ProductsToBeOrdered,
+    productData: ProductData | ProductsToBeOrdered,
     amountToRemove: number = 0,
   ) => {
     const currentOrder = get().order

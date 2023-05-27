@@ -1,8 +1,9 @@
-import { AddToCartInProductPage } from '@/components/buttons'
-import { ProductVariantOptions } from '@/components/product/ProductVariantOptions'
-import { Product } from '@/types'
-import { env } from '@/utils/env'
-import Image from 'next/image'
+import { ProductData } from '@/types'
+import { queryGetProductByHandle } from '@/utils/graphql/querys'
+import { query } from '@/utils/shopify/storefrontApi'
+import { ProductContainer } from './components/ProductContainer'
+import { NutritionalTable } from './components/NutritionalTable'
+import { CarouselProductsContainer } from './components/CarouselProductsContainer'
 
 interface Params {
   params: {
@@ -13,31 +14,51 @@ interface Params {
 export default async function LearnMoreProduct({ params }: Params) {
   const { handle } = params //! TODO: use ZOD to valid that
 
-  const response = await fetch(
-    `${env.APPLICATION_PATH}${env.APPLICATION_API_PATH}/get-product-by-handle?handle=${handle}`,
-    {
-      cache: 'no-store', //! TODO: Use the correct cache
-    },
+  const queryResult = await query(queryGetProductByHandle(handle))
+
+  const { product } = queryResult as { product: any } //! TODO: check this out -> remove that
+
+  const { title, id, description, featuredImage, variants, images, options } =
+    product
+  const { nodes } = variants
+  const nodesImages = images.nodes.filter(
+    (image: any, index: number) => index > 0,
   )
+  const variant = nodes[0]
 
-  const productData: Product = await response.json()
+  console.log('product', product)
 
-  const { description, currencySymbol, image, price, title, altText } =
-    productData
+  const newProduct = {
+    title,
+    id,
+    producHandle: product.handle,
+    description,
+    currencySymbol: 'R$',
+    image: featuredImage.url,
+    nutritionalTableImages: nodesImages,
+    price: variant.price.amount,
+    altText: `${featuredImage.altText}`,
+    variantId: variant.id,
+    currencyCode: variant.price.currencyCode,
+    options,
+  }
+
+  console.log('newProduct', newProduct)
 
   return (
-    <>
-      <h2>{title}</h2>
+    <div
+      className={`
 
-      <Image alt={altText} src={image} width={550} height={550} />
-
-      <p>{description}</p>
-      <p>
-        {currencySymbol} {price}
-      </p>
-
-      <ProductVariantOptions />
-      <AddToCartInProductPage productData={productData} />
-    </>
+      flex flex-col  py-6 gap-12
+    
+    `}
+    >
+      {/* @ts-expect-error -> Async Server Component */}
+      <ProductContainer productData={newProduct} />
+      {/* @ts-expect-error -> Async Server Component */}
+      <NutritionalTable images={nodesImages} />
+      {/* @ts-expect-error -> Async Server Component */}
+      <CarouselProductsContainer />
+    </div>
   )
 }
