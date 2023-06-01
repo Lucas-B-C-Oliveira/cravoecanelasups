@@ -1,6 +1,6 @@
 type Options = {
   name: string
-  value: string[]
+  values: string[]
 }
 
 export type Variants = {

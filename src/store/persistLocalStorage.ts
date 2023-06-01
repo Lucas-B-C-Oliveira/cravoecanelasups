@@ -3,7 +3,7 @@ import { persist, createJSONStorage } from 'zustand/middleware'
 
 type Options = {
   name: string
-  value: string[]
+  values: string[]
 }
 
 export type Variant = {

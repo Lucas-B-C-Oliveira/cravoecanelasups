@@ -85,35 +85,16 @@ export function ProductInfoContainer({ productData }: Props) {
             {title}
           </h3>
 
-          {/* {options.length > 0 &&
-          options.map((option: any) => {
-            return (
-              <SelectVariantOptions
-                key={option.name}
-                option={option}
-                setProductData={setProductData}
-                buttonWasClicked={buttonWasClicked}
-                productId={productId}
-                setOptionSelected={setOptionSelected}
-                options={optionSelected}
-                setQueryData={setQueryData}
-              />
-            )
-          })} */}
-
-          {options.length > 0 &&
-            options.map((option: any) => {
-              return (
-                <div key={option.name}>
-                  <label
-                    htmlFor="select"
-                    className="text-sm font-semibold text-gray-yellow-cc-700"
-                  >
-                    {option.name}:
-                  </label>
-                  <select
-                    {...register('flavor')}
-                    className={`
+          <div key={options[0].name}>
+            <label
+              htmlFor="select"
+              className="text-sm font-semibold text-gray-yellow-cc-700"
+            >
+              {options[0].name}:
+            </label>
+            <select
+              {...register('flavor')}
+              className={`
                     w-full shadow-select-variant-product-options-cc
                     shadow-color-select-variant-product-options-cc rounded-md
                     border-0 px-2.5 py-1 text-sm font-medium text-gray-yellow-cc-700
@@ -124,22 +105,20 @@ export function ProductInfoContainer({ productData }: Props) {
                     }
 
                   `}
-                    defaultValue={option.name}
-                  >
-                    <option value="">Selecione</option>
+              defaultValue={options[0].name}
+            >
+              <option value="">Selecione</option>
 
-                    {option.values.length > 0 &&
-                      option.values.map((optionValue: any) => {
-                        return (
-                          <option key={optionValue} value={optionValue}>
-                            {optionValue}
-                          </option>
-                        )
-                      })}
-                  </select>
-                </div>
-              )
-            })}
+              {options[0]?.values.length > 0 &&
+                options[0]?.values.map((optionValue: any) => {
+                  return (
+                    <option key={optionValue} value={optionValue}>
+                      {optionValue}
+                    </option>
+                  )
+                })}
+            </select>
+          </div>
 
           <div>
             <p className="text-sm font-semibold text-gray-yellow-cc-700">

@@ -11,7 +11,7 @@ export async function ProductImage({ imageUrl, alt, productHandle }: Props) {
   return (
     <Link
       className=" flex flex-col items-center h-fit w-fit"
-      href={`products/${productHandle}`}
+      href={`product/${productHandle}`}
     >
       <Image
         className="h-64 w-36"
