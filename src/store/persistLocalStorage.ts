@@ -1,11 +1,6 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 
-type CustomAttributes = {
-  key: string
-  value: string
-}
-
 type Options = {
   name: string
   value: string[]
@@ -34,7 +29,6 @@ export interface ProductStateFrontEndData {
 }
 
 type ProductInCart = {
-  customAttributes: CustomAttributes[]
   quantity: number
   variantId: string
   productFrontEndData: ProductStateFrontEndData
@@ -51,40 +45,43 @@ export const usePersistLocalStorage = create<myState>()(
       cartData: [],
       addProduct: (product: ProductStateFrontEndData) => {
         console.log('product', product)
-        // const currentProducts = get().cartData
-        // const addNewProduct = currentProducts.some(
-        //   (cartProduct: ProductInCart) =>
-        //     product.productId === cartProduct.variantId,
-        // )
-        // if (addNewProduct) {
-        //   const newProduct: ProductInCart = {
-        //     variantId: product.productId,
-        //     quantity: 1,
-        //     productFrontEndData: product,
-        //     customAttributes: [
-        //       {
-        //         ...product.customAttributes,
-        //       },
-        //     ],
-        //   }
-        //   set({
-        //     cartData: [...get().cartData, newProduct],
-        //   })
-        // } else {
-        //   const oldProduct = get().cartData.find(
-        //     (cartProduct: ProductInCart) =>
-        //       product.productId === cartProduct.variantId,
-        //   )
-        //   if (typeof oldProduct !== 'undefined') {
-        //     const newProduct: ProductInCart = {
-        //       ...oldProduct,
-        //       quantity: oldProduct?.quantity + 1,
-        //     }
-        //     set({
-        //       cartData: [...get().cartData, newProduct],
-        //     })
-        //   }
-        // }
+
+        const currentProducts = get().cartData
+
+        const addNewProduct = currentProducts.some(
+          (cartProduct: ProductInCart) =>
+            product.variant.variantId === cartProduct.variantId,
+        )
+
+        console.log('addNewProduct', addNewProduct)
+
+        if (!addNewProduct) {
+          const newProduct: ProductInCart = {
+            variantId: product.variant.variantId,
+            quantity: 1,
+            productFrontEndData: product,
+          }
+          set({
+            cartData: [...get().cartData, newProduct],
+          })
+        } else {
+          const newCardData = get().cartData.map(
+            (cartProduct: ProductInCart) => {
+              if (product.variant.variantId === cartProduct.variantId) {
+                return {
+                  ...cartProduct,
+                  quantity: cartProduct?.quantity + 1,
+                }
+              }
+
+              return cartProduct
+            },
+          )
+
+          set({
+            cartData: [...newCardData],
+          })
+        }
       },
     }),
     {

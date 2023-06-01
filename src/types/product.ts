@@ -4,7 +4,7 @@ type Options = {
 }
 
 export type Variants = {
-  variantId: string
+  id: string
   selectedOptions: {
     name: string
     value: string

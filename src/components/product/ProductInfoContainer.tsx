@@ -49,12 +49,14 @@ export function ProductInfoContainer({ productData }: Props) {
 
     if (typeof variantSelected === 'undefined') return
 
+    console.log('variantSelected', variantSelected)
+
     const newVariant: Variant = {
       selectedOption: {
         name: variantSelected.selectedOptions[0].name,
         value: variantSelected.selectedOptions[0].value,
       },
-      variantId: variantSelected.variantId,
+      variantId: variantSelected.id,
     }
 
     const newProduct: ProductStateFrontEndData = {
