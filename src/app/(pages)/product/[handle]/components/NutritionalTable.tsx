@@ -1,27 +1,21 @@
-import { Separator } from '@/components/Separator/Separator'
-import Image from 'next/image'
+import { Separator } from "@/components/Separator/Separator";
+import Image from "next/image";
 
 interface Props {
-  images: any[]
+  images: any[];
 }
 
 export async function NutritionalTable({ images }: Props) {
-  console.log('image', images)
+  console.log("image", images);
   return (
-    <div
-      className={`
-
-      flex flex-col gap-6
-    
-    
-    `}
-    >
+    <div className={`flex flex-col gap-6`}>
       {/* @ts-expect-error -> Async Server Component */}
       <Separator text="Tabela Nutricional" />
 
       <div
         className={`
       flex h-fit w-full  justify-items-center justify-center
+      max-[950px]:flex-col 
     
     `}
       >
@@ -37,5 +31,5 @@ export async function NutritionalTable({ images }: Props) {
           ))}
       </div>
     </div>
-  )
+  );
 }

@@ -1,15 +1,25 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@600&family=Montserrat:wght@300;400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@600&family=Montserrat:wght@300;400;500;600;700;800&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-html, body, #root {
-  background-color: #FFFFFFFF
+html,
+body,
+#root {
+  background-color: #ffffffff;
 }
 
 @layer base {
   html {
-    font-family: Montserrat, system-ui, sans-serif
+    font-family: Montserrat, system-ui, sans-serif;
   }
+}
+
+.swiper-button-prev:after,
+.swiper-button-next:after {
+  color: yellow !important;
+}
+.swiper-pagination-bullet-active {
+  background: yellow !important;
 }
