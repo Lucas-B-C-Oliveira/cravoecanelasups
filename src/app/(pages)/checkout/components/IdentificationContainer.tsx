@@ -1,10 +1,16 @@
 'use client'
-import { ReactElement, ReactNode, cloneElement, useState } from 'react'
+import { usePersistStore } from '@/store/persistStore'
+import { ReactElement, cloneElement } from 'react'
+import { PesonalData } from './PersonalData'
+import useStore from '@/store/useStore'
+import { getCookie } from 'cookies-next'
 
 interface Props {
   emailComponent: ReactElement
   loginComponent: ReactElement
   registerComponent: ReactElement
+  chooseAnAddress: ReactElement
+  registerAddress: ReactElement
   isTheUserLoggedIn: boolean
 }
 
@@ -23,35 +29,36 @@ export function Identification({
   emailComponent,
   loginComponent,
   registerComponent,
+  registerAddress,
+  chooseAnAddress,
   isTheUserLoggedIn,
 }: Props) {
-  const [userEmailData, setUserEmailData] = useState<undefined | UserEmailData>(
-    undefined,
-  )
+  const userAcessToken = getCookie('@ecravoecanela:access_token')
 
-  const [userData, setUserData] = useState<undefined | UserAddressesData>(
-    undefined,
-  )
+  const userData = useStore(usePersistStore, (state) => state.userData)
+  console.log('userAcessToken', userAcessToken)
 
-  if (!isTheUserLoggedIn && typeof userData === 'undefined') {
+  if (typeof userAcessToken === 'undefined') {
     return (
       <>
-        {typeof userEmailData === 'undefined' &&
-          cloneElement(emailComponent, { setUserEmailData })}
-        {userEmailData?.existingUser &&
-          cloneElement(loginComponent, { userEmailData, setUserData })}
-        {userEmailData?.existingUser === false &&
-          cloneElement(registerComponent, {
-            userData,
-            setUserData,
-          })}
+        {typeof userData?.email === 'undefined' && cloneElement(emailComponent)}
+        {userData?.existingUser === true && cloneElement(loginComponent)}
+        {userData?.existingUser === false && cloneElement(registerComponent)}
       </>
     )
   }
 
   return (
     <>
-      <p>Usuário Logado e dados de endereço</p>
+      <PesonalData />
+      {userData?.addresses?.length <= 0 && cloneElement(registerAddress)}
+
+      {userData?.addresses?.length > 0 &&
+        typeof userData?.chosenAddress === 'undefined' &&
+        cloneElement(chooseAnAddress)}
+
+      {typeof userData?.chosenAddress !== 'undefined' &&
+        cloneElement(<p>Endereço Escolhido</p>)}
     </>
   )
 }

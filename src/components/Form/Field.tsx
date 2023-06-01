@@ -1,7 +1,16 @@
 import { HTMLAttributes } from 'react'
 
-interface FieldProps extends HTMLAttributes<HTMLDivElement> {}
+interface FieldProps<T = HTMLDivElement | HTMLLabelElement>
+  extends HTMLAttributes<T> {
+  as?: string
+}
 
-export function Field(props: FieldProps) {
-  return <div className="flex flex-col w-full" {...props} />
+export function Field<T = HTMLDivElement | HTMLLabelElement>(
+  props: FieldProps<T>,
+) {
+  if (props?.as === 'label') {
+    return <label {...props} />
+  } else {
+    return <div className="flex flex-col w-full" {...props} />
+  }
 }

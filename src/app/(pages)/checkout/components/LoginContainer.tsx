@@ -1,26 +1,14 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
-import { memo, useRef, useState } from 'react'
-import { UserEmailData } from './IdentificationContainer'
+import { memo, useRef } from 'react'
 import { setCookie } from 'cookies-next'
-
-interface Props {
-  setUserData?: (value: any) => void
-  userEmailData?: UserEmailData
-}
-
-function validateEmail(email: string) {
-  const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
-  return emailRegex.test(email)
-}
-
-function validatePassword(password: string) {
-  const passwordRegex =
-    /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{};:,<.>])(?!.*\s).{8,}$/
-
-  return passwordRegex.test(password)
-}
+import { usePersistStore } from '@/store/persistStore'
+import { z } from 'zod'
+import { FormProvider, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Form } from '@/components/Form'
+import useStore from '@/store/useStore'
 
 function setAccessTokenToCookie(accessToken: string, maxAgeInSeconds: number) {
   setCookie('@ecravoecanela:access_token', accessToken, {
@@ -32,21 +20,39 @@ function setAccessTokenToCookie(accessToken: string, maxAgeInSeconds: number) {
   })
 }
 
-export const Login = memo(function Login({
-  userEmailData,
-  setUserData,
-}: Props) {
-  const [emailValue, setEmailValue] = useState(userEmailData?.email)
-  const [passwordValue, setPasswordValue] = useState('')
-  const validEmail = useRef(true)
-  const validPassword = useRef(true)
+const createUserLoginSchema = z.object({
+  email: z
+    .string()
+    .nonempty({
+      message: 'O e-mail é obrigatório',
+    })
+    .email({
+      message: 'Formato de e-mail inválido',
+    })
+    .toLowerCase(),
+  password: z
+    .string()
+    .nonempty({
+      message: 'A senha é obrigatória',
+    })
+    .min(6, {
+      message: 'A senha precisa ter no mínimo 6 caracteres',
+    }),
+})
+
+type UserLoginData = z.infer<typeof createUserLoginSchema>
+
+export const Login = memo(function Login() {
+  const userData = useStore(usePersistStore, (state) => state.userData)
+  const { setUserData } = usePersistStore()
+  const userLoginData = useRef<undefined | UserLoginData>(undefined)
 
   const {
     refetch: getAllUserDataToCheckoutRefetch,
-    isLoading: isLoadingGetAllUserData,
-    data: dataGetAllUserData,
+    isLoading: isLoadingAllUserData,
+    data: allUserData,
   } = useQuery({
-    queryKey: ['getAllUserDataToCheckout'],
+    queryKey: ['get-delivery-address-in-login-checkout'],
     queryFn: async () => {
       const response = await fetch(
         (((process.env.NEXT_PUBLIC_APPLICATION_PATH as string) +
@@ -58,19 +64,17 @@ export const Login = memo(function Login({
     },
     enabled: false,
     onSuccess: (data) => {
-      if (data.email === emailValue) {
-        if (typeof setUserData !== 'undefined') {
-          setUserData(data)
-        }
-      }
+      console.log('data do Login', data)
+      setUserData({
+        addresses: data.addresses.nodes,
+        defaultAddress: data.defaultAddress,
+        name: data.displayName,
+        id: data.id,
+      })
     },
   })
 
-  const {
-    isLoading: isLoadingLogin,
-    refetch,
-    data: dataLogin,
-  } = useQuery({
+  const { isLoading: isLoadingLogin, refetch: refetchLogin } = useQuery({
     queryKey: ['login'],
     queryFn: async () => {
       const response = await fetch(
@@ -78,10 +82,7 @@ export const Login = memo(function Login({
           process.env.NEXT_PUBLIC_APPLICATION_API_PATH) as string) + `/sign-in`,
         {
           method: 'POST',
-          body: JSON.stringify({
-            email: emailValue,
-            password: passwordValue,
-          }),
+          body: JSON.stringify(userLoginData?.current),
         },
       )
       const result = await response.json()
@@ -96,129 +97,63 @@ export const Login = memo(function Login({
     },
   })
 
-  function handleButton() {
-    const inputsFilled = emailValue !== '' && passwordValue !== ''
-    if (validEmail.current === false || !inputsFilled) return
-    refetch()
-  }
+  const loginUserForm = useForm<UserLoginData>({
+    resolver: zodResolver(createUserLoginSchema),
+  })
 
-  function handleEmailInput(event: any) {
-    const inputValue = event.target.value
-    validEmail.current = validateEmail(inputValue)
-    setEmailValue(inputValue)
-  }
+  const {
+    handleSubmit,
+    formState: { isSubmitting },
+  } = loginUserForm
 
-  function handlePasswordInput(event: any) {
-    const inputValue = event.target.value
-    validPassword.current = validatePassword(inputValue)
-    setPasswordValue(inputValue)
+  function login(data: UserLoginData) {
+    userLoginData.current = data
+    refetchLogin()
   }
 
   return (
-    <div
-      className={`
-        flex flex-col
-      `}
-    >
-      <div
-        className={`
-        flex flex-col gap-6
-        items-center
-
-      `}
+    <FormProvider {...loginUserForm}>
+      <form
+        onSubmit={handleSubmit(login)}
+        className="flex flex-col gap-6 w-full max-w-xs items-center"
       >
-        <div
-          className={`
-          flex flex-col w-full
-      
-          `}
-        >
-          <label
-            className={`
-            text-base font-semibold text-gray-yellow-cc-800
-          `}
-          >
-            E-mail
-          </label>
-
-          <input
+        <Form.Field>
+          <Form.Label htmlFor="email">E-mail</Form.Label>
+          <Form.Input
             type="email"
-            className={`
-            rounded-lg
-            bg-white
-            px-3.5
-            py-3
-            text-sm text-gray-yellow-cc-750 font-medium
-            shadow-inputs-checkouts-cc
-            shadow-color-inputs-checkout-cc
-            focus:outline-none focus:ring-2 focus:ring-gray-yellow-cc-600
-            outline-none border-0
-            ${
-              validEmail.current === false && !!emailValue
-                ? 'ring-2 ring-red-500'
-                : 'ring-0'
-            }
-          `}
+            name="email"
             placeholder="Digite seu e-mail"
-            onChange={handleEmailInput}
-            value={emailValue === '' ? userEmailData?.email : emailValue}
+            defaultValue={userData?.email}
           />
-        </div>
+          <Form.ErrorMessage field="email" />
+        </Form.Field>
 
-        <div
-          className={`
-          flex flex-col w-full
-      
-          `}
-        >
-          <label
-            className={`
-            text-base font-semibold text-gray-yellow-cc-800
-          `}
-          >
-            Senha
-          </label>
-
-          <input
+        <Form.Field>
+          <Form.Label htmlFor="password">Senha</Form.Label>
+          <Form.Input
             type="password"
-            className={`
-            rounded-lg
-            bg-white
-            px-3.5
-            py-3
-            text-sm text-gray-yellow-cc-750 font-medium
-            shadow-inputs-checkouts-cc
-            shadow-color-inputs-checkout-cc
-            focus:outline-none focus:ring-2 focus:ring-gray-yellow-cc-600
-            outline-none border-0
-            ${
-              validPassword.current === false && !!passwordValue
-                ? 'ring-2 ring-red-500'
-                : 'ring-0'
-            }
-          `}
-            placeholder="Digite sua senha"
-            onChange={handlePasswordInput}
-            value={passwordValue}
+            name="password"
+            placeholder="Digite uma senha"
           />
-        </div>
+          <Form.ErrorMessage field="password" />
+        </Form.Field>
+
         <button
-          onClick={handleButton}
+          type="submit"
+          disabled={isSubmitting}
           className={`
-            font-semibold text-gray-yellow-cc-800 text-lg px-6 py-3 bg-white w-fit h-fit rounded-lg
-            hover:bg-yellow-50
-            shadow-inputs-checkouts-cc
-            shadow-color-inputs-checkout-cc
-          
-          `}
+                font-semibold text-gray-yellow-cc-800 text-lg px-6 py-3 bg-white w-fit h-fit rounded-lg
+                hover:bg-yellow-50
+                shadow-inputs-checkouts-cc
+                shadow-color-inputs-checkout-cc
+              `}
         >
           Login
-          {isLoadingLogin &&
-            dataLogin?.email === emailValue &&
-            isLoadingGetAllUserData &&
-            dataGetAllUserData?.email === emailValue && <p>Loading</p>}
+          {typeof allUserData === 'undefined' &&
+            isLoadingLogin &&
+            isLoadingAllUserData && <p>Loading</p>}
         </button>
-      </div>
-    </div>
+      </form>
+    </FormProvider>
   )
 })

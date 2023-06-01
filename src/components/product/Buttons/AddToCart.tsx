@@ -1,4 +1,6 @@
 import { ShoppingCartAddToCartButtonIcon } from '@/components/Icons'
+import { usePersistLocalStorage } from '@/store/persistLocalStorage'
+import useStore from '@/store/useStore'
 import { ProductData } from '@/types'
 
 interface Props {
@@ -12,7 +14,10 @@ export function AddToCart({
   setButtonWasClicked,
   optionSelected,
 }: Props) {
-  // const addProductToCart = useGlobalStore((state) => state.addProductToCart)
+  const addProduct = useStore(
+    usePersistLocalStorage,
+    (state) => state.addProduct,
+  )
 
   function handleAddToCart() {
     console.log('optionSelected', optionSelected)
@@ -26,6 +31,7 @@ export function AddToCart({
       setButtonWasClicked(true)
     } else {
       if (typeof productData !== 'undefined') {
+        console.log('productData', productData)
         console.log('Entrou no if')
       }
     }

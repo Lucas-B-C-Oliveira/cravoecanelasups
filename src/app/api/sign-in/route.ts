@@ -31,14 +31,6 @@ export async function POST(req: NextRequest) {
       (tokenExpirationDate.getTime() - now.getTime()) / 1000,
     )
 
-    // setCookie({ res }, '@ecravoecanela:access_token', accessToken, {
-    //   maxAge: maxAgeInSeconds, // expira em 30 dias
-    //   path: '/',
-    //   sameSite: 'lax',
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV === 'production',
-    // })
-
     result.message = 'Login realizado com sucesso!'
     result.authenticated = true
     result.accessToken = accessToken

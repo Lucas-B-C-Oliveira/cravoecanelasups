@@ -1,31 +1,17 @@
 export function mutationCustomerCreate() {
-  return `mutation customerCreate($input: CustomerInput!) {
-    customerCreate(input: $input) {
-      userErrors {
-        field
-        message
-      }
-      customer {
-        id
-        email
-        phone
-        taxExempt
-        firstName
-        lastName
-        smsMarketingConsent {
-          marketingState
-          marketingOptInLevel
-        }
-        addresses {
-          address1
-          city
-          country
-          phone
-          zip
-        }
-      }
+  return `mutation customerCreate($input: CustomerCreateInput!) {
+  customerCreate(input: $input) {
+    customer {
+      id
+      displayName
+    }
+    customerUserErrors {
+      code
+      field
+      message
     }
   }
+}
 `
 }
 
@@ -101,4 +87,71 @@ mutation checkoutCustomerAssociateV2($checkoutId: ID!, $customerAccessToken: Str
   }
 }
 `
+}
+
+export function mutationCustomerUpdateFields() {
+  return `
+    mutation customerUpdate($input: CustomerInput!) {
+      customerUpdate(input: $input) {
+        userErrors {
+          field
+          message
+        }
+        customer {
+          id
+          metafields(first: 10) {
+            edges {
+              node {
+                id
+                namespace
+                key
+                value
+              }
+            }
+          }
+        }
+      }
+    }
+  `
+}
+
+export function mutationCustomerUpdateAdresses() {
+  return `
+    mutation customerUpdate($input: CustomerInput!) {
+      customerUpdate(input: $input) {
+        userErrors {
+          field
+          message
+        }
+        customer {
+          addresses{
+            id
+          }
+          defaultAddress {
+            id
+          }
+        }
+      }
+    }
+  `
+}
+
+export function mutationCustomerAdressCreate() {
+  return `
+    mutation customerAddressCreate($address: MailingAddressInput!, $customerAccessToken: String!) {
+      customerAddressCreate(
+        address: $address
+        customerAccessToken: $customerAccessToken
+      ) {
+        customerAddress {
+          id
+        }
+        customerUserErrors {
+          code
+          field
+          message
+        }
+      }
+    }
+  `
 }

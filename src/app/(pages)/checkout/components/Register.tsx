@@ -1,21 +1,24 @@
 'use client'
 
-import { memo } from 'react'
 import { DatePickerInput } from './DatePickerInput'
 import { Form } from '@/components/Form'
 import { z } from 'zod'
 import { FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { UserEmailData } from './IdentificationContainer'
+import { usePersistStore } from '@/store/persistStore'
+import { memo, useRef } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import useStore from '@/store/useStore'
+import { setCookie } from 'cookies-next'
 
-export type FormData = {
-  email: string
-  cpf: string
-  fullName: string
-  dateOfBirth: string
-  phone: string
-  password: string
-  passwordConfirmation: string
+function setAccessTokenToCookie(accessToken: string, maxAgeInSeconds: number) {
+  setCookie('@ecravoecanela:access_token', accessToken, {
+    maxAge: maxAgeInSeconds, // expira em 30 dias
+    path: '/',
+    // sameSite: 'lax',
+    // httpOnly: true,
+    // secure: process.env.NODE_ENV === 'production',
+  })
 }
 
 const createUserSchema = z
@@ -45,9 +48,14 @@ const createUserSchema = z
       message: 'Digite um CPF válido',
     }),
     birthDate: z.string(),
-    phone: z.string().refine((value) => value.length !== 10, {
-      message: 'Digite um número válido',
-    }),
+    phone: z
+      .string()
+      .refine((value) => value.length !== 10, {
+        message: 'Digite um número válido',
+      })
+      .transform((number) => {
+        return '+55' + number
+      }),
     password: z
       .string()
       .nonempty({
@@ -64,40 +72,47 @@ const createUserSchema = z
 
 type CreateUserData = z.infer<typeof createUserSchema>
 
-interface Props {
-  setUserData?: (value: any) => void
-  userEmailData?: UserEmailData
-}
+export const Register = memo(function Register() {
+  const userData = useStore(usePersistStore, (state) => state.userData)
+  const { setUserData } = usePersistStore()
 
-export const Register = memo(function Register({
-  setUserData,
-  userEmailData,
-}: Props) {
-  // const {
-  //   isLoading: isLoadingRegisterNewUser,
-  //   refetch: refetchRegisterNewUser,
-  //   data: dataRegisterNewUser,
-  // } = useQuery({
-  //   queryKey: ['registerNewUser'],
-  //   queryFn: async () => {
-  //     console.log('formData', formData.current)
-  //     const response = await fetch(
-  //       (((process.env.NEXT_PUBLIC_APPLICATION_PATH as string) +
-  //         process.env.NEXT_PUBLIC_APPLICATION_API_PATH) as string) +
-  //         `/create-customer`,
-  //       {
-  //         method: 'POST',
-  //         body: JSON.stringify(formData.current),
-  //       },
-  //     )
-  //     const result = await response.json()
-  //     return result
-  //   },
-  //   enabled: false,
-  //   onSuccess: (data) => {
-  //     console.log('data', data)
-  //   },
-  // })
+  const formData = useRef<CreateUserData | undefined>(undefined)
+  const {
+    // isLoading: isLoadingRegisterNewUser,
+    refetch: refetchRegisterNewUser,
+    // data: dataRegisterNewUser,
+  } = useQuery({
+    queryKey: ['registerNewUser'],
+    queryFn: async () => {
+      if (typeof formData.current === 'undefined') return
+
+      console.log('Antes de enviar pra API', formData.current)
+
+      const response = await fetch(
+        (((process.env.NEXT_PUBLIC_APPLICATION_PATH as string) +
+          process.env.NEXT_PUBLIC_APPLICATION_API_PATH) as string) +
+          `/create-customer`,
+        {
+          method: 'POST',
+          body: JSON.stringify(formData.current),
+        },
+      )
+
+      const result = await response.json()
+      console.log('Depois da API result', result)
+      return result
+    },
+    enabled: false,
+    onSuccess: (data: any) => {
+      if (data.result.authenticated) {
+        setAccessTokenToCookie(data.result.accessToken, data.result.expiresAt)
+      }
+      setUserData({
+        ...formData.current,
+        id: data?.customerId,
+      })
+    },
+  })
 
   const createUserForm = useForm<CreateUserData>({
     resolver: zodResolver(createUserSchema),
@@ -116,11 +131,9 @@ export const Register = memo(function Register({
     )
 
   function createUser(data: CreateUserData) {
-    console.log('data', data)
-
-    if (typeof setUserData !== 'undefined') {
-      setUserData(data)
-    }
+    formData.current = data
+    setUserData({ ...data, id: undefined })
+    refetchRegisterNewUser()
   }
 
   return (
@@ -131,7 +144,12 @@ export const Register = memo(function Register({
       >
         <Form.Field>
           <Form.Label htmlFor="name">Nome e Sobrenome</Form.Label>
-          <Form.Input type="name" name="name" placeholder="Digite seu nome" />
+          <Form.Input
+            type="name"
+            name="name"
+            placeholder="Digite seu nome"
+            defaultValue={userData?.name}
+          />
           <Form.ErrorMessage field="name" />
         </Form.Field>
 
@@ -141,13 +159,20 @@ export const Register = memo(function Register({
             type="email"
             name="email"
             placeholder="Digite seu e-mail"
+            defaultValue={userData?.email}
           />
           <Form.ErrorMessage field="email" />
         </Form.Field>
 
         <Form.Field>
           <Form.Label htmlFor="cpf">CPF</Form.Label>
-          <Form.Input type="number" name="cpf" placeholder="Digite seu CPF" />
+
+          <Form.Input
+            type="number"
+            name="cpf"
+            placeholder="Digite seu CPF"
+            defaultValue={userData?.cpf}
+          />
           <Form.ErrorMessage field="cpf" />
         </Form.Field>
 
@@ -156,13 +181,19 @@ export const Register = memo(function Register({
           <DatePickerInput
             name="birthDate"
             placeholder="Selecione sua data de nascimento"
+            defaultValue={userData?.birthDate}
           />
           <Form.ErrorMessage field="birthDate" />
         </Form.Field>
 
         <Form.Field>
           <Form.Label htmlFor="phone">WhatsApp ou Celular</Form.Label>
-          <Form.Input type="number" name="phone" placeholder="DDD + Número" />
+          <Form.Input
+            type="number"
+            name="phone"
+            placeholder="DDD + Número"
+            defaultValue={userData?.phone}
+          />
           <Form.ErrorMessage field="phone" />
         </Form.Field>
 

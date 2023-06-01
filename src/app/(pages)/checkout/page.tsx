@@ -1,8 +1,10 @@
 import { CardContainer } from './components/CardContainer'
+import { ChooseAnAddress } from './components/ChooseAnAddress'
 import { EmailContainer } from './components/EmailContainer'
 import { Identification } from './components/IdentificationContainer'
 import { Login } from './components/LoginContainer'
 import { Register } from './components/Register'
+import { RegisterAddress } from './components/RegisterAddress'
 
 export default async function Checkout() {
   return (
@@ -17,6 +19,8 @@ export default async function Checkout() {
           emailComponent={<EmailContainer />}
           loginComponent={<Login />}
           registerComponent={<Register />}
+          registerAddress={<RegisterAddress />}
+          chooseAnAddress={<ChooseAnAddress />}
           isTheUserLoggedIn={false}
         />
       </CardContainer>

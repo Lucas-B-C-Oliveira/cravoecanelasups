@@ -1,128 +1,115 @@
 'use client'
 
+import { Form } from '@/components/Form'
+import { usePersistStore } from '@/store/persistStore'
+import useStore from '@/store/useStore'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery } from '@tanstack/react-query'
-import { memo, useRef, useState } from 'react'
+import { memo, useRef } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-interface Props {
-  setUserEmailData?: (value: any) => void
-}
+const createUserEmailSchema = z.object({
+  email: z
+    .string()
+    .nonempty({
+      message: 'O e-mail é obrigatório',
+    })
+    .email({
+      message: 'Formato de e-mail inválido',
+    })
+    .toLowerCase(),
+})
 
-function validateEmail(email: string) {
-  const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
-  return emailRegex.test(email)
-}
+type UserEmailData = z.infer<typeof createUserEmailSchema>
 
-export const EmailContainer = memo(function EmailContainer({
-  setUserEmailData: setUseData,
-}: Props) {
-  const [emailValue, setEmailValue] = useState('')
-  const [userSearchDone, setUserSearchDone] = useState(false)
-  const validEmail = useRef(true)
+export const EmailContainer = memo(function EmailContainer() {
+  const userData = useStore(usePersistStore, (state) => state.userData)
+  const { setUserData } = usePersistStore()
+  const emailValue = useRef('')
 
-  const { isLoading } = useQuery({
+  const createUserEmailForm = useForm<UserEmailData>({
+    resolver: zodResolver(createUserEmailSchema),
+  })
+
+  const {
+    handleSubmit,
+    formState: { isSubmitting },
+  } = createUserEmailForm
+
+  const { isLoading, refetch } = useQuery({
     queryKey: ['userDataByEmail'],
     queryFn: async () => {
+      console.log('emailValue.current', emailValue.current)
+
       const response = await fetch(
-        process.env.NEXT_PUBLIC_APPLICATION_PATH +
-          process.env.NEXT_PUBLIC_APPLICATION_API_PATH +
-          `/check-if-customer-exists-by-email?email=${emailValue}`,
+        (((process.env.NEXT_PUBLIC_APPLICATION_PATH as string) +
+          process.env.NEXT_PUBLIC_APPLICATION_API_PATH) as string) +
+          `/check-if-customer-exists-by-email?email=${emailValue.current}`,
       )
 
       const result = await response.json()
 
       return result
     },
-    enabled: userSearchDone,
+    enabled: false,
     onSuccess: (data) => {
-      if (typeof setUseData !== 'undefined') {
-        const existingUser = data.some(
-          (element: any) => typeof element.email !== 'undefined',
-        )
+      const existingUser = data.some(
+        (element: any) => typeof element.email !== 'undefined',
+      )
 
-        const currentData = data[0]
+      console.log('data', data)
+      console.log('existingUser', existingUser)
+      console.log('existingUser', typeof existingUser)
 
-        setUseData({
-          existingUser,
-          email: existingUser ? currentData.email : '',
-          id: existingUser ? currentData.id : '',
-        })
-      }
+      const currentData = data[0]
+
+      console.log('emailValue.current', emailValue.current)
+
+
+      setUserData({
+        existingUser,
+        email: emailValue.current,
+        id: existingUser ? currentData.id : undefined,
+      })
     },
   })
 
-  function handleButton() {
-    if (validEmail.current === false || emailValue === '') return
-    setUserSearchDone(true)
-  }
-
-  function handleInput(event: any) {
-    const inputValue = event.target.value
-    validEmail.current = validateEmail(inputValue)
-    setEmailValue(inputValue)
+  function checkEmail(data: UserEmailData) {
+    emailValue.current = data.email
+    refetch()
   }
 
   return (
-    <div
-      className={`
-        flex flex-col
-      `}
-    >
-      <div
-        className={`
-        flex flex-col gap-6
-        items-center
-
-      `}
+    <FormProvider {...createUserEmailForm}>
+      <form
+        onSubmit={handleSubmit(checkEmail)}
+        className="flex flex-col gap-6 w-full max-w-xs items-center"
       >
-        <div
-          className={`
-          flex flex-col w-full
-      
-          `}
-        >
-          <label
-            className={`
-            text-base font-semibold text-gray-yellow-cc-800
-          `}
-          >
-            E-mail
-          </label>
-          <input
+        <Form.Field>
+          <Form.Label htmlFor="email">E-mail</Form.Label>
+          <Form.Input
             type="email"
-            className={`
-            rounded-lg
-            bg-white
-            px-3.5
-            py-3
-            text-sm text-gray-yellow-cc-750 font-medium
-            shadow-inputs-checkouts-cc
-            shadow-color-inputs-checkout-cc
-            focus:outline-none focus:ring-2 focus:ring-gray-yellow-cc-600
-            outline-none border-0
-            ${
-              validEmail.current === false && !!emailValue
-                ? 'ring-2 ring-red-500'
-                : 'ring-0'
-            }
-          `}
+            name="email"
             placeholder="Digite seu e-mail"
-            onChange={handleInput}
-            value={emailValue}
+            defaultValue={userData?.email}
           />
-        </div>
+          <Form.ErrorMessage field="email" />
+        </Form.Field>
         <button
-          onClick={handleButton}
+          type="submit"
+          disabled={isSubmitting}
           className={`
-          font-semibold text-gray-yellow-cc-800 text-lg px-6 py-3 bg-white w-fit h-fit rounded-lg
-          hover:bg-yellow-50
-          shadow-inputs-checkouts-cc
-          shadow-color-inputs-checkout-cc
-          
-          `}
+                font-semibold text-gray-yellow-cc-800 text-lg px-6 py-3 bg-white w-fit h-fit rounded-lg
+                hover:bg-yellow-50
+                shadow-inputs-checkouts-cc
+                shadow-color-inputs-checkout-cc
+              `}
         >
-          Continuar {isLoading && userSearchDone && <p>Loading</p>}
+          Continuar
+          {emailValue.current !== '' && isLoading && <p>Loading</p>}
         </button>
-      </div>
-    </div>
+      </form>
+    </FormProvider>
   )
 })

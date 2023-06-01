@@ -1,6 +1,5 @@
 'use client'
 
-import {} from 'react'
 import { ShoppingCartSimpleMainMenuIcon } from '../Icons'
 import { useGlobalState } from '@/store/globalStore'
 
@@ -16,6 +15,7 @@ export function CartButton() {
   function handleCartButton() {
     if (hamburguerMenuOpen) openOrCloseHamburguerMenu()
     if (searchTabOpen) openOrCloseSearchTab()
+    console.log('eaa')
     openOrCloseCartsidebar()
   }
 

@@ -30,7 +30,6 @@ const options = {
     selected: 'text-white bg-gray-yellow-cc-500',
   },
   icons: {
-    // () => ReactElement | JSX.Element
     prev: () => <CaretLeft />,
     next: () => <CaretRight />,
   },
@@ -88,7 +87,7 @@ export const DatePickerInput = memo(function DatePickerInput(
           outline-none border-0 w-full h-fit text-sm text-gray-yellow-cc-750 font-medium"
         type="text"
         {...register(props.name)}
-        value={inputValue}
+        value={inputValue === '' ? props.defaultValue : inputValue}
         onFocus={() => setShow(true)}
         {...props}
       />

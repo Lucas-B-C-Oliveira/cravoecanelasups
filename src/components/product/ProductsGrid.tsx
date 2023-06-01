@@ -17,6 +17,8 @@ export async function ProductsGrid({
 
   const { nodes } = queryResult.collection.products
 
+  console.log('productsData', nodes)
+
   const products: ProductData[] = nodes.map((product: ProductData) => {
     const { url, altText } = product.featuredImage
 
