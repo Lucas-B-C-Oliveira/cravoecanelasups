@@ -103,7 +103,6 @@ export function ProductInfoContainer({ productData }: Props) {
                         ? 'focus:ring-red-500 focus:ring-2 ring-2 ring-red-500'
                         : 'focus:ring-hard-yellow-cc-500'
                     }
-
                   `}
               defaultValue={options[0].name}
             >
@@ -131,9 +130,8 @@ export function ProductInfoContainer({ productData }: Props) {
         </div>
         <div
           className={`
-        flex flex-col gap-1.5 grow-0
-      
-      `}
+            flex flex-col gap-1.5 grow-0
+          `}
         >
           <button
             name="addToCart"

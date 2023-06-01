@@ -1,14 +1,14 @@
 'use client'
 
 import { useGlobalState } from '@/store/globalStore'
-import { usePersistStore } from '@/store/persistStore'
+import { usePersistLocalStorage } from '@/store/persistLocalStorage'
 import useStore from '@/store/useStore'
 
 export function CartSidebar() {
   const { cartsidebarOpen } = useGlobalState()
 
-  const userData = useStore(usePersistStore, (state) => state.userData)
-  const { setUserData } = usePersistStore()
+  const cartData = useStore(usePersistLocalStorage, (state) => state.cartData)
+  const { addProduct } = usePersistLocalStorage()
 
   return (
     <>
