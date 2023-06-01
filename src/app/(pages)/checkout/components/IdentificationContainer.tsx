@@ -11,7 +11,6 @@ interface Props {
   registerComponent: ReactElement
   chooseAnAddress: ReactElement
   registerAddress: ReactElement
-  isTheUserLoggedIn: boolean
 }
 
 export type UserEmailData = {
@@ -31,7 +30,6 @@ export function Identification({
   registerComponent,
   registerAddress,
   chooseAnAddress,
-  isTheUserLoggedIn,
 }: Props) {
   const userAcessToken = getCookie('@ecravoecanela:access_token')
 

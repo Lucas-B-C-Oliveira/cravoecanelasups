@@ -21,7 +21,6 @@ export default async function Checkout() {
           registerComponent={<Register />}
           registerAddress={<RegisterAddress />}
           chooseAnAddress={<ChooseAnAddress />}
-          isTheUserLoggedIn={false}
         />
       </CardContainer>
     </div>

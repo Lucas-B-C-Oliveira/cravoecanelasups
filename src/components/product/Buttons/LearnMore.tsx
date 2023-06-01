@@ -13,10 +13,8 @@ export function LearnMore({ productData }: Props) {
 
   // const addProductToCart = useGlobalStore((state) => state.addProductToCart)
 
-  function handleAddToCart() {
+  function handleLearnMore() {
     router.push(`/product/${productData.handle}`)
-
-    // const order = await addProductToCart(productData)
   }
 
   return (

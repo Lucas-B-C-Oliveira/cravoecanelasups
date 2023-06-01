@@ -1,6 +1,10 @@
 'use client'
 
-import { ShoppingCartAddToCartButtonIcon } from '../Icons'
+import {
+  ArrowCircleRightBuyNowButtonIcon,
+  InfoLearnMoreButtonIcon,
+  ShoppingCartAddToCartButtonIcon,
+} from '../Icons'
 import { FormProvider, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -10,6 +14,7 @@ import {
   usePersistLocalStorage,
 } from '@/store/persistLocalStorage'
 import { ProductData, Variants } from '@/types'
+import { useRouter } from 'next/navigation'
 
 interface Props {
   productData: ProductData
@@ -25,6 +30,8 @@ export function ProductInfoContainer({ productData }: Props) {
   const { title, currencySymbol, options, price } = productData
   const { addProduct } = usePersistLocalStorage()
 
+  const router = useRouter()
+
   const priceWithTwoZeros = Number(price).toFixed(2)
   const priceWithComma = priceWithTwoZeros.replace('.', ',')
 
@@ -38,8 +45,10 @@ export function ProductInfoContainer({ productData }: Props) {
     register,
   } = selectFlavorForm
 
-  function checkSelect(data: SelectFlavorData) {
+  function checkSelect(data: SelectFlavorData, event: any) {
     const { variants, ...restProductData } = productData
+
+    console.log('name', event.target.name)
 
     if (typeof variants === 'undefined') return
 
@@ -48,8 +57,6 @@ export function ProductInfoContainer({ productData }: Props) {
     )
 
     if (typeof variantSelected === 'undefined') return
-
-    console.log('variantSelected', variantSelected)
 
     const newVariant: Variant = {
       selectedOption: {
@@ -66,13 +73,21 @@ export function ProductInfoContainer({ productData }: Props) {
 
     if (typeof addProduct !== 'undefined') {
       addProduct(newProduct)
+
+      if (event.target.name === 'buyNow') {
+        router.push(`/checkout`)
+      }
     }
+  }
+
+  function handleLearnMore() {
+    router.push(`/product/${productData.handle}`)
   }
 
   return (
     <FormProvider {...selectFlavorForm}>
       <form
-        onSubmit={handleSubmit(checkSelect)}
+        // onSubmit={handleSubmit(checkSelect)}
         className="flex flex-col gap-6 w-full max-w-xs items-center"
       >
         <div
@@ -135,7 +150,7 @@ export function ProductInfoContainer({ productData }: Props) {
         >
           <button
             name="addToCart"
-            type="submit"
+            onClick={handleSubmit(checkSelect)}
             disabled={isSubmitting}
             className={`
             rounded-lg 
@@ -150,17 +165,39 @@ export function ProductInfoContainer({ productData }: Props) {
             Adicionar ao Carrinho
           </button>
 
-          {/* <AddToCart
-            setButtonWasClicked={setButtonWasClicked}
-            productData={productData}
-            optionSelected={optionSelected}
-          />
-          <BuyNow
-            setButtonWasClicked={setButtonWasClicked}
-            productData={productData}
-            optionSelected={optionSelected}
-          />
-          <LearnMore productData={productHttpData} /> */}
+          <button
+            name="buyNow"
+            onClick={handleSubmit(checkSelect)}
+            disabled={isSubmitting}
+            className={`
+              rounded-lg 
+              flex flex-row flex-nowrap gap-1 w-fit h-fit
+              bg-gradient-to-t from-gradient-yellow-cc-600 from-5% to-gradient-yellow-cc-500
+              text-base font-semibold text-gray-yellow-cc-800
+              px-2.5 py-1.5
+              items-center      
+            `}
+          >
+            <ArrowCircleRightBuyNowButtonIcon />
+            Comprar Agora
+          </button>
+
+          <button
+            className={`
+              rounded-lg 
+              flex flex-row flex-nowrap gap-1 w-fit h-fit
+              bg-white
+              shadow-color-button-more-info-shadow-cc
+              shadow-button-more-info-cc
+              text-sm font-semibold text-gray-yellow-cc-750
+              px-2.5 py-1.5
+              items-center      
+            `}
+            onClick={handleLearnMore}
+          >
+            <InfoLearnMoreButtonIcon />
+            Mais Informações
+          </button>
         </div>
       </form>
     </FormProvider>
