@@ -1,7 +1,6 @@
 "use client";
 
 import { ImageCarousel } from "./ImageCarousel";
-import Image from "next/image";
 import "swiper/swiper-bundle.css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Mousewheel, Keyboard } from "swiper";
@@ -55,17 +54,3 @@ export function CarouselContainer({ images, imagesMobile }: Props) {
     </>
   );
 }
-
-/* <div className="w-full h-80 overflow-hidden absolute inset-x-0 ">
-        <div onDrag={handleDrag} className="w-full h-full">
-          {images &&
-            images.map((image: string, index: number) => (
-              <ImageCarousel
-                className="flex w-full h-80"
-                key={image}
-                url={image}
-                alt={alts[index]}
-              />
-            ))}
-        </div>
-      </div> */
