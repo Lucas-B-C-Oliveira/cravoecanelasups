@@ -99,6 +99,15 @@ export function queryGetProductsByCollectionHandle(
         title
         handle
         description
+        variants(first: 40) {
+          nodes {
+            id
+            selectedOptions {
+              name
+              value
+            }
+          }
+        }
         options {
           name
           values

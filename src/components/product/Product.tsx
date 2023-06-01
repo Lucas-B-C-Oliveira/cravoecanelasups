@@ -7,20 +7,7 @@ interface Props {
 }
 
 export async function Product({ productData }: Props) {
-  const {
-    title,
-    image,
-    description,
-    price,
-    handle,
-    altText,
-    currencySymbol,
-    options,
-    id,
-  } = productData
-
-  const priceWithTwoZeros = Number(price).toFixed(2)
-  const priceWithComma = priceWithTwoZeros.replace('.', ',')
+  const { image, handle, altText } = productData
 
   return (
     <div
@@ -38,14 +25,7 @@ export async function Product({ productData }: Props) {
       {/* @ts-expect-error -> Async Server Component */}
       <ProductImage imageUrl={image} productHandle={handle} alt={altText} />
 
-      <ProductInfoContainer
-        currencySymbol={currencySymbol}
-        options={options}
-        priceValue={priceWithComma}
-        title={title}
-        productId={id}
-        productHttpData={productData}
-      />
+      <ProductInfoContainer productData={productData} />
     </div>
   )
 }

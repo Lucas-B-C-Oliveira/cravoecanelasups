@@ -7,6 +7,7 @@ export async function Carousel() {
   const { metaobjectDefinitionByType } = await queryAdmin(
     queryMetaObjectByType('carrossel_home'),
   )
+
   const { metaobjects } = metaobjectDefinitionByType
   const [imagesData, altsData] = metaobjects.nodes[0].fields
 

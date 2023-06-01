@@ -20,18 +20,19 @@ export async function ProductsGrid({
   console.log('productsData', nodes)
 
   const products: ProductData[] = nodes.map((product: ProductData) => {
-    const { url, altText } = product.featuredImage
+    const { url, altText } = product?.featuredImage
 
     return {
       id: product.id,
       title: product.title,
       handle: product.handle,
       description: product.description,
-      currencyCode: product.priceRange.minVariantPrice.currencyCode,
+      currencyCode: product?.priceRange?.minVariantPrice.currencyCode,
       currencySymbol: 'R$',
       altText: `${altText}`,
       image: url,
-      price: product.priceRange.minVariantPrice.amount,
+      variants: product.variants?.nodes,
+      price: product?.priceRange?.minVariantPrice.amount,
       options: product.options,
     }
   })

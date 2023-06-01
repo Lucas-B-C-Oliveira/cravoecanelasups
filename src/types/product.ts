@@ -1,3 +1,16 @@
+type Options = {
+  name: string
+  value: string[]
+}
+
+export type Variants = {
+  variantId: string
+  selectedOptions: {
+    name: string
+    value: string
+  }[]
+}
+
 export interface ProductData {
   title: string
   price: string
@@ -5,10 +18,11 @@ export interface ProductData {
   description: string
   handle: string
   id: string
+  variants: Variants[]
   currencySymbol: string
   currencyCode: string
   altText: string
-  options: any[]
+  options: Options[]
 }
 
 export interface PriceRange {
