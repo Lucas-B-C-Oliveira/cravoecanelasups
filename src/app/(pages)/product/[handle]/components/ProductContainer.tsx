@@ -10,13 +10,14 @@ export async function ProductContainer({ productData }: Props) {
     <div
       className={`
     
-      min-[950px]:flex-colmun w-full h-fit justify-center items-center
+      min-[950px]:flex min-[950px]:flex-row w-full h-fit justify-center items-center
     `}
     >
       <p
         className={`
         font-medium text-base text-gray-yellow-cc-800 
         max-[950px]:text-xs 
+        min-[950px]:w-[27.625rem]
       `}
       >
         {productData.description}
