@@ -37,6 +37,9 @@ type ProductInCart = {
 interface myState {
   cartData: ProductInCart[]
   addProduct: (newProduct: ProductStateFrontEndData) => void
+  addProductById: (productVariantId: string) => void
+  removeProductById: (productVariantId: string) => void
+  removeProductQuantityById: (productVariantId: string) => void
 }
 
 export const usePersistLocalStorage = create<myState>()(
@@ -44,18 +47,14 @@ export const usePersistLocalStorage = create<myState>()(
     (set, get) => ({
       cartData: [],
       addProduct: (product: ProductStateFrontEndData) => {
-        console.log('product', product)
-
         const currentProducts = get().cartData
 
-        const addNewProduct = currentProducts.some(
+        const addOldProduct = currentProducts.some(
           (cartProduct: ProductInCart) =>
             product.variant.variantId === cartProduct.variantId,
         )
 
-        console.log('addNewProduct', addNewProduct)
-
-        if (!addNewProduct) {
+        if (!addOldProduct) {
           const newProduct: ProductInCart = {
             variantId: product.variant.variantId,
             quantity: 1,
@@ -82,6 +81,62 @@ export const usePersistLocalStorage = create<myState>()(
             cartData: [...newCardData],
           })
         }
+      },
+
+      addProductById: (productVariantId: string) => {
+        const newCardData = get().cartData.map((cartProduct: ProductInCart) => {
+          if (productVariantId === cartProduct.variantId) {
+            return {
+              ...cartProduct,
+              quantity: cartProduct?.quantity + 1,
+            }
+          }
+
+          return cartProduct
+        })
+
+        set({
+          cartData: [...newCardData],
+        })
+      },
+
+      removeProductById: (productVariantId: string) => {
+        const newCardData = get().cartData.filter(
+          (cartProduct: ProductInCart) =>
+            productVariantId !== cartProduct.variantId,
+        )
+
+        set({
+          cartData: [...newCardData],
+        })
+      },
+
+      removeProductQuantityById: (productVariantId: string) => {
+        let indexProductToRemove: undefined | number
+        const newCardData = get().cartData.map(
+          (cartProduct: ProductInCart, index: number) => {
+            if (productVariantId === cartProduct.variantId) {
+              if (cartProduct?.quantity - 1 <= 0) {
+                indexProductToRemove = index
+              }
+
+              return {
+                ...cartProduct,
+                quantity: cartProduct?.quantity - 1,
+              }
+            }
+
+            return cartProduct
+          },
+        )
+
+        if (typeof indexProductToRemove === 'number') {
+          newCardData.splice(indexProductToRemove, 1)
+        }
+
+        set({
+          cartData: [...newCardData],
+        })
       },
     }),
     {
