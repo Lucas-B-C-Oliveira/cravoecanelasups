@@ -1,8 +1,8 @@
-import Image from "next/image";
-import { ProductMainContent } from "./ProductMainContent";
+import Image from 'next/image'
+import { ProductMainContent } from './ProductMainContent'
 
 interface Props {
-  productData: any;
+  productData: any
 }
 
 export async function ProductContainer({ productData }: Props) {
@@ -33,5 +33,5 @@ export async function ProductContainer({ productData }: Props) {
       {/* @ts-expect-error -> Async Server Component */}
       <ProductMainContent productData={productData} />
     </div>
-  );
+  )
 }
