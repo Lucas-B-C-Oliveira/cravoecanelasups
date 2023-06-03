@@ -1,6 +1,6 @@
 import { SearchProductsSidebarButton } from './SearchProductsSidebarButton'
 
-export async function SearchContent() {
+export function SearchContent() {
   return (
     <div
       className={`

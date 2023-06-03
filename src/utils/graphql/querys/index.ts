@@ -133,15 +133,24 @@ export function queryGetProductsByCollectionHandle(
   `
 }
 
-export function queryGetProductsByFilterType(
+export function queryGetProductsByFilters(
   collectionHandle: string,
   firstProducts: number = 40,
-  productType: string,
+  filters: any[],
 ) {
+  console.log('newFilterss dentro da query', filters)
+
+  const stringFilters = JSON.stringify(filters)
+
+  const regex = /"([^"]+)"(?=:)/g
+  const modifiedString = stringFilters.replace(regex, '$1')
+
+  console.log('modifiedString', modifiedString)
+
   return `
 {
   collection(handle: "${collectionHandle}") {
-    products(first: ${firstProducts}, filters: { productType: "${productType}"}) {
+    products(first: ${firstProducts}, filters: ${modifiedString}) {
       ${productNodesData}
     }
   }

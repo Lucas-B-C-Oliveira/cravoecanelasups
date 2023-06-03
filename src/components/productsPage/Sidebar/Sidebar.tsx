@@ -1,7 +1,9 @@
 import { Breadcrumb } from './Breadcrumb'
 import { CategoriesContent } from './CategoriesContent'
+import { CategoryCheckbox } from './CategoryCheckbox'
 import { PriceContent } from './PriceContent'
 import { SearchContent } from './SearchContent'
+import { SidebarClientContainer } from './SidebarClientContainer'
 
 const categoriesMock = [
   {
@@ -32,17 +34,12 @@ export async function Sidebar() {
         shadow-products-sidebar-cc
         shadow-color-products-sidebar-shadow-cc
         gap-6
-        
       
       `}
     >
       {/* @ts-expect-error -> Async Server Component */}
       <Breadcrumb />
-      {/* @ts-expect-error -> Async Server Component */}
-      <SearchContent />
-      <PriceContent />
-      {/* @ts-expect-error -> Async Server Component */}
-      <CategoriesContent categories={categoriesMock} />
+      <SidebarClientContainer />
     </div>
   )
 }

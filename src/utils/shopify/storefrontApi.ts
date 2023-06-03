@@ -78,6 +78,32 @@ export async function query(query: string) {
   })
 }
 
+export async function queryWithVariables(query: string, variables: any) {
+  const data = {
+    query,
+    variables,
+  }
+
+  const result = await fetch(
+    env.public.SHOPIFY_APPLICATION_PATH +
+      env.public.SHOPIFY_STOREFRONT_GRAPHQL_API_PATH,
+    {
+      ...defaultRequestData,
+      body: JSON.stringify(data),
+    },
+  )
+
+  const jsonResult = await result.json()
+
+  if (jsonResult.errors) {
+    return new Error(jsonResult.errors[0].message)
+  }
+
+  return await new Promise((resolve) => {
+    resolve(jsonResult.data)
+  })
+}
+
 export async function queryClient(query: string) {
   const result = await fetch(
     env.public.SHOPIFY_APPLICATION_PATH +

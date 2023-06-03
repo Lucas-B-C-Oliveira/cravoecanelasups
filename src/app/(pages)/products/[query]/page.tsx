@@ -1,28 +1,155 @@
 import { ProductsGrid } from '@/components/product/ProductsGrid'
 import { Pagination } from '@/components/productsPage/Pagination/Pagination'
 import { Sidebar } from '@/components/productsPage/Sidebar/Sidebar'
-import {
-  queryGetProductsByCollectionHandle,
-  queryGetProductsByFilterType,
-} from '@/utils/graphql/querys'
+import { ProductData } from '@/types'
+import { queryGetProductsByFilters } from '@/utils/graphql/querys'
 import { query } from '@/utils/shopify/storefrontApi'
 
-interface ProductsProps {
-  params: {
-    query: string
+type CheckBoxFilters = {
+  productType?: string[]
+  price?: {
+    min: string
+    max: string
   }
 }
 
+type ClientFilters = {
+  textInput?: string
+  checkBoxFilters?: CheckBoxFilters
+}
+
+type ProductType = {
+  productType: string
+}
+
+type Price = {
+  price: {
+    min: number
+    max: number
+  }
+}
+
+type ApiFilter = {
+  filters: Array<ProductType & Price> | Array<Price> | Array<ProductType>
+}
+
+interface ProductsProps {
+  params: {
+    clientFilters?: ClientFilters
+  }
+}
+
+// function makeApiFilter(
+//   clientFilters: ClientFilters,
+//   checkBoxFilters: CheckBoxFilters,
+//   textInput: string,
+// ): ApiFilter {}
+
+function makeApiFilterByCheckBoxFilters(
+  checkBoxFilters: CheckBoxFilters,
+): ApiFilter {
+  const { price: prices, productType } = checkBoxFilters
+
+  let productTypes: ProductType[]
+  const price = {}
+
+  const filters: any = []
+
+  if (productType) {
+    productTypes = productType.map((productTypeValue: string) => ({
+      productType: productTypeValue,
+    }))
+
+    filters.push(...productTypes)
+  }
+
+  if (prices) {
+    const min = Number(prices.min)
+    const max = Number(prices.max)
+
+    Object.defineProperty(price, 'price', {
+      value: { min, max },
+      writable: true,
+      enumerable: true,
+      configurable: true,
+    })
+
+    filters.push(price)
+  }
+
+  const newApiFilter: ApiFilter = {
+    filters,
+  }
+
+  return newApiFilter
+}
+
+async function getProductsByFilters(
+  clientFilters?: ClientFilters,
+): Promise<any> {
+  if (!clientFilters) {
+    return 'mais-vendidos'
+  } else {
+    const { textInput, checkBoxFilters } = clientFilters
+
+    let queryContent: string = ''
+
+    if (checkBoxFilters && textInput) {
+      queryContent = 'a'
+    } else if (textInput) {
+      queryContent = 'b'
+    } else if (checkBoxFilters) {
+      const { filters } = makeApiFilterByCheckBoxFilters(checkBoxFilters)
+      queryContent = queryGetProductsByFilters('todos-produtos', 40, filters)
+    }
+
+    const queryResult = await query(queryContent)
+
+    const { nodes } = queryResult?.collection?.products
+
+    return nodes
+  }
+}
+
+function transformApiDataToProductData(data: any): ProductData[] {
+  const products: ProductData[] = data.map((product: ProductData) => {
+    const { url, altText } = product?.featuredImage
+    return {
+      id: product.id,
+      title: product.title,
+      handle: product.handle,
+      description: product.description,
+      currencyCode: product?.priceRange?.minVariantPrice.currencyCode,
+      currencySymbol: 'R$',
+      altText: `${altText}`,
+      image: url,
+      variants: product.variants?.nodes,
+      price: product?.priceRange?.minVariantPrice.amount,
+      options: product.options,
+    }
+  })
+  return products
+}
+
 export default async function Products({ params }: ProductsProps) {
-  const { query: queryParam } = params
+  const { clientFilters } = params
 
-  const queryResult = await query(
-    queryGetProductsByFilterType('todos-produtos', 40, 'creatina'),
-  )
+  const clientFiltersTeste: ClientFilters = {
+    checkBoxFilters: {
+      price: {
+        max: '150',
+        min: '100',
+      },
+      productType: ['creatina', 'hipercalórico'],
+    },
+  }
 
-  const { nodes } = queryResult?.collection.products
+  const response = await getProductsByFilters(clientFiltersTeste)
+  const products = transformApiDataToProductData(response)
 
-  console.log('nodes', nodes)
+  //! TODO: Fazer a paginação aqui => e enviar por props pro componente de paginação
+
+  console.log('products', products)
 
   return (
     <div
