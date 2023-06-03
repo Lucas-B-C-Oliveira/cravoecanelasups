@@ -39,8 +39,8 @@ export const AddToCart = memo(function AddToCart({ productData }: Props) {
       rounded-lg
       w-fit
       h-fit
-
-      hover:from-hover-gradient-yellow-cc-650 hover:to-hover-gradient-yellow-cc-450
+      transition duration-300 ease-in-out
+      transform hover:-translate-y-1 hover:shadow-lg
 
     `}
     >

@@ -111,11 +111,10 @@ export function ProductInfoContainer({ productData }: Props) {
                     w-full shadow-select-variant-product-options-cc
                     shadow-color-select-variant-product-options-cc rounded-md
                     border-0 px-2.5 py-1 text-sm font-medium text-gray-yellow-cc-700
-                    ring-inset sm:text-sm ${
-                      errors.flavor
-                        ? 'focus:ring-red-500 focus:ring-2 ring-2 ring-red-500'
-                        : 'focus:ring-hard-yellow-cc-500'
-                    }
+                    ring-inset sm:text-sm ${errors.flavor
+                  ? 'focus:ring-red-500 focus:ring-2 ring-2 ring-red-500'
+                  : 'focus:ring-hard-yellow-cc-500'
+                }
                   `}
               defaultValue={options[0].name}
             >
@@ -156,7 +155,9 @@ export function ProductInfoContainer({ productData }: Props) {
             bg-gradient-to-t from-gradient-yellow-cc-600 from-5% to-gradient-yellow-cc-500
             text-base font-semibold text-gray-yellow-cc-800
             px-2.5 py-1.5
-            items-center      
+            items-center   
+            transition duration-300 ease-in-out
+            transform hover:-translate-y-1 hover:shadow-lg   
           `}
           >
             <ShoppingCartAddToCartButtonIcon />
@@ -173,7 +174,9 @@ export function ProductInfoContainer({ productData }: Props) {
               bg-gradient-to-t from-gradient-yellow-cc-600 from-5% to-gradient-yellow-cc-500
               text-base font-semibold text-gray-yellow-cc-800
               px-2.5 py-1.5
-              items-center      
+              items-center 
+              transition duration-300 ease-in-out
+              transform hover:-translate-y-1 hover:shadow-lg     
             `}
           >
             <ArrowCircleRightBuyNowButtonIcon />

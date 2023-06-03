@@ -33,7 +33,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             2xl:px-28   
             px-4 
             relative 
-
+            min-[950px]:mt-[7rem]
             pb-6
           `}
           >

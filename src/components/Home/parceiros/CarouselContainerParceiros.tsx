@@ -3,7 +3,8 @@
 import { ImageCarousel } from "./ImageCarouselParceiros";
 import "swiper/swiper-bundle.css";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper";
+import { Navigation } from "swiper";
+import { Separator } from "@/components/Separator/Separator";
 
 interface Props {
   images: string[];
@@ -16,36 +17,38 @@ export function CarouselContainerParceiros({ images }: Props) {
 
   const screenWidth = window.innerWidth;
 
+  const arrowStyles = {
+    color: 'red', // Define a cor das setas como vermelho
+  };
+
   return (
     <>
-      <div className="w-full overflow-hidden inset-x-0 -mt-[2rem] -mb-[2rem]">
-        <Swiper
-          slidesPerView={screenWidth > 750 ? 4 : 2}
-          spaceBetween={30}
-          pagination={{
-            clickable: true,
-          }}
-          modules={[Pagination]}
-          className="mySwiper"
-        >
-          <div onDrag={handleDrag}>
+      <div className="w-full overflow-hidden inset-x-0 -mt-[2rem] -mb-[2rem] min-[750px]:px-[5rem]">
+        <Swiper navigation={true} spaceBetween={30} modules={[Navigation]} slidesPerView={screenWidth > 750 ? 3 : 1} className="">
+          <div onDrag={handleDrag} >
             {images &&
               images.map((image: string, index: number) => (
-                <SwiperSlide key={image} className="pb-[2rem]">
-                  <ImageCarousel
-                    className={
-                      screenWidth > 750
-                        ? "w-[20rem] h-[10rem]"
-                        : "w-[25rem] h-[6rem]"
-                    }
-                    url={image}
-                    alt={"nossos parceiros"}
-                  />
-                </SwiperSlide>
+                <>
+                  <SwiperSlide key={image} style={{
+                    'display': 'flex',
+                    justifyContent: 'center',
+                    color: 'red'
+                  }}>
+                    <ImageCarousel
+                      className={
+                        screenWidth > 750
+                          ? "w-[300px] h-[150px]"
+                          : "w-[15rem] h-[7rem]"
+                      }
+                      url={image}
+                      alt={"nossos parceiros"}
+                    />
+                  </SwiperSlide>
+                </>
               ))}
           </div>
         </Swiper>
-      </div>
+      </div >
     </>
   );
 }

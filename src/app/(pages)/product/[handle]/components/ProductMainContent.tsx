@@ -30,13 +30,14 @@ export async function ProductMainContent({ productData }: Props) {
       >
         {title}
       </p>
-      <button
+      <a
         className={`
         font-bold text-gray-yellow-cc-750 text-xs underline
       `}
+        href="#nutrition-table"
       >
         Tabela Nutricional
-      </button>
+      </a>
       <p
         className={`
       text-2xl font-bold text-gray-yellow-cc-850
