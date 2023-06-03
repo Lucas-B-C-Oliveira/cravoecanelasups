@@ -6,13 +6,13 @@ export async function Separator({ text }: Props) {
   return (
     <div
       className={`
-
-        w-full
-        h-14
-        rounded-lg
-        bg-gradient-to-t from-gradient-yellow-cc-600 from-10% to-gradient-yellow-cc-500
-        flex flex-row items-center justify-center
-      `}
+      w-full
+      h-14
+      rounded-lg
+      bg-gradient-to-t from-gradient-yellow-cc-600 from-10% to-gradient-yellow-cc-500
+      flex flex-row items-center justify-center
+      shadow-lg-red
+    `}
     >
       <h1
         className={`
@@ -22,5 +22,6 @@ export async function Separator({ text }: Props) {
         {text}
       </h1>
     </div>
+
   )
 }

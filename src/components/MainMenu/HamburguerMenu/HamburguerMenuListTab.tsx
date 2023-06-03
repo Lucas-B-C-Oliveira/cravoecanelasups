@@ -4,10 +4,10 @@ import { useGlobalState } from '@/store/globalStore'
 import { useRouter } from 'next/navigation'
 
 const buttonsNavigation = [
-  {
-    name: 'Entrar',
-    href: '/signinAndSignup',
-  },
+  // {
+  //   name: 'Entrar',
+  //   href: '/signinAndSignup',
+  // },
   {
     name: 'Contato',
     href: '#contato',

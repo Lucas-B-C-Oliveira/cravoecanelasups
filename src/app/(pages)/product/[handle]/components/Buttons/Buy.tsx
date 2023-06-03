@@ -33,21 +33,21 @@ export const Buy = memo(function Buy({ productData }: Props) {
     <button
       onClick={handle}
       className={`
-      text-gray-yellow-cc-800
-      font-semibold
-      text-lg
-      px-6
-      py-3
-      bg-gradient-to-t from-gradient-yellow-cc-650 to-gradient-yellow-cc-450
-      rounded-lg
-      w-fit
-      h-fit
-
-      hover:from-hover-gradient-yellow-cc-650 hover:to-hover-gradient-yellow-cc-450
-
-    `}
+    text-gray-yellow-cc-800
+    font-semibold
+    text-lg
+    px-6
+    py-3
+    bg-gradient-to-t from-gradient-yellow-cc-650 to-gradient-yellow-cc-450
+    rounded-lg
+    w-fit
+    h-fit
+    transition duration-300 ease-in-out
+    transform hover:-translate-y-1 hover:shadow-lg
+  `}
     >
       COMPRAR
     </button>
+
   )
 })
