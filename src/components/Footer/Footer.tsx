@@ -16,7 +16,7 @@ export async function Footer() {
       py-7
       px-4
       flex flex-col gap-8 justify-center 
-      
+      flex-grow 
     
     `}
     >
@@ -35,9 +35,9 @@ export async function Footer() {
       <LinksList
         title="Menu"
         childrens={[
-          <Links key="Produtos" text="Produtos" href="" />,
-          <Links key="Blog" text="Blog" href="" />,
-          <Links key="Entrar" text="Entrar" href="" />,
+          <Links key="Produtos" text="Produtos" href="../products/mais-vendidos" />,
+          // <Links key="Blog" text="Blog" href="" />,
+          // <Links key="Entrar" text="Entrar" href="" />,
           <Links key="WHEY PROTEIN" text="WHEY PROTEIN" href="" />,
           <Links key="CREATINA" text="CREATINA" href="" />,
           <Links key="PRÉ-TREINO" text="PRÉ-TREINO" href="" />,
