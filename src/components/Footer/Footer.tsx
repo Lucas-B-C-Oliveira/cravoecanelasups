@@ -70,7 +70,7 @@ export async function Footer() {
       <div id="physicalStores">
         {/* @ts-expect-error -> Async Server Component */}
         <LinksList
-          title="Redes Sociais"
+          title="Localização"
           childrens={[
             <Links
               key="Unidade I: R. Rui Barbosa, 2030."

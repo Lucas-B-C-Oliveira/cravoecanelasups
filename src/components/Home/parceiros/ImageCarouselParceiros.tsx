@@ -14,8 +14,8 @@ export function ImageCarousel({ alt = "", url, className }: Props) {
       className={className}
       src={url}
       alt={alt}
-      width={1000}
-      height={1000}
+      width={5000}
+      height={5000}
     />
   );
 }
