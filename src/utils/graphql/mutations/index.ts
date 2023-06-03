@@ -35,18 +35,19 @@ export function mutationGetAuthenticationTokenByEmailAndPassword() {
 
 export function mutationCreateCheckout() {
   return `
-  mutation createCheckout($input: CheckoutCreateInput!) {
-  checkoutCreate(input: $input) {
-    checkout {
-      id
+    mutation checkoutCreate($input: CheckoutCreateInput!) {
+      checkoutCreate(input: $input) {
+        checkout {
+          id
+          webUrl
+          
+        }
+        checkoutUserErrors {
+          message
+        }
+        queueToken
+      }
     }
-    checkoutUserErrors {
-      code
-      field
-      message
-    }
-  }
-}
 `
 }
 

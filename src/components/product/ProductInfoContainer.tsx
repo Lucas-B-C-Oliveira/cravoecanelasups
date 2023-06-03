@@ -9,15 +9,12 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
-  ProductInCart,
   ProductStateFrontEndData,
   Variant,
   usePersistLocalStorage,
 } from '@/store/persistLocalStorage'
 import { ProductData, Variants } from '@/types'
 import { useRouter } from 'next/navigation'
-import { useQuery } from '@tanstack/react-query'
-import useStore from '@/store/useStore'
 
 interface Props {
   productData: ProductData
@@ -29,47 +26,9 @@ const selectFlavorSchema = z.object({
 
 type SelectFlavorData = z.infer<typeof selectFlavorSchema>
 
-type CheckoutData = {
-  allowPartialAddresses: boolean
-  buyerIdentity: {
-    countryCode: string
-  }
-  customAttributes: {
-    key: string
-    value: string
-  }[]
-  email: string
-  lineItems: [
-    {
-      customAttributes: {
-        key: string
-        value: string
-      }[]
-      quantity: number
-      variantId: string
-    },
-  ]
-  note: string
-  shippingAddress: {
-    address1: string
-    address2: string
-    city: string
-    company: string
-    country: string
-    firstName: string
-    lastName: string
-    phone: string
-    province: string
-    zip: string
-  }
-}
-
-function buildCheckoutData(productsInCart: ProductInCart) {}
-
 export function ProductInfoContainer({ productData }: Props) {
   const { title, currencySymbol, options, price } = productData
   const { addProduct } = usePersistLocalStorage()
-  const cartData = useStore(usePersistLocalStorage, (state) => state.cartData)
 
   const router = useRouter()
 
@@ -78,33 +37,6 @@ export function ProductInfoContainer({ productData }: Props) {
 
   const selectFlavorForm = useForm<SelectFlavorData>({
     resolver: zodResolver(selectFlavorSchema),
-  })
-
-  const {
-    // isLoading: isLoadingRegisterNewUser,
-    refetch: refetchCreateCheckout,
-    // data: dataRegisterNewUser,
-  } = useQuery({
-    queryKey: ['createCheckout'],
-    queryFn: async () => {
-      console.log('Antes de enviar pra API', formData.current)
-
-      const response = await fetch(
-        (((process.env.NEXT_PUBLIC_APPLICATION_PATH as string) +
-          process.env.NEXT_PUBLIC_APPLICATION_API_PATH) as string) +
-          `/create-customer`,
-        {
-          method: 'POST',
-          body: JSON.stringify(formData.current),
-        },
-      )
-
-      const result = await response.json()
-      console.log('Depois da API result', result)
-      return result
-    },
-    enabled: false,
-    onSuccess: (data: any) => {},
   })
 
   const {
@@ -141,8 +73,7 @@ export function ProductInfoContainer({ productData }: Props) {
       addProduct(newProduct)
 
       if (event.target.name === 'buyNow') {
-        console.log('cartData', cartData)
-        // router.push(`/checkout`)
+        router.push(`/checkout`)
       }
     }
   }

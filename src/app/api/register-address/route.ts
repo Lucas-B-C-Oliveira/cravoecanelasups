@@ -23,8 +23,6 @@ export async function POST(req: NextRequest) {
     phone,
   } = dataReceived
 
-  console.log('dataReceived', dataReceived)
-
   const complemento = complement === '' ? '.' : `, complemento ${complement}.`
 
   const address1 = `Rua ${street}, número ${number}, bairro ${district}${complemento}`
@@ -32,8 +30,6 @@ export async function POST(req: NextRequest) {
   const splitName = recipient.split(' ')
   const firstName = splitName[0]
   const lastName = splitName[1]
-
-  console.log('address1', address1)
 
   try {
     // const response = await mutationAdmin(mutationCustomerUpdateAdresses(), {
