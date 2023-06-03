@@ -1,7 +1,7 @@
-import { Carousel } from "@/components/Home/carousel/Carousel";
-import { CarouselParceiros } from "@/components/Home/parceiros/CarouselParceiros";
-import { Separator } from "@/components/Separator/Separator";
-import { ProductsGrid } from "@/components/product/ProductsGrid";
+import { Carousel } from '@/components/Home/carousel/Carousel'
+import { CarouselParceiros } from '@/components/Home/parceiros/CarouselParceiros'
+import { Separator } from '@/components/Separator/Separator'
+import { ProductsGrid } from '@/components/product/ProductsGrid'
 
 export default async function Home() {
   return (
@@ -23,6 +23,7 @@ export default async function Home() {
         {/* @ts-expect-error -> Async Server Component */}
         <Separator text="Marcas Parceiras" />
         <div>
+          {/* @ts-expect-error -> Async Server Component */}
           <CarouselParceiros />
         </div>
         {/* @ts-expect-error -> Async Server Component */}
@@ -31,5 +32,5 @@ export default async function Home() {
         <ProductsGrid collectionHandle="todos-produtos" />
       </div>
     </div>
-  );
+  )
 }
