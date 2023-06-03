@@ -86,14 +86,7 @@ export function queryGetProductByHandle(handle: string) {
   `
 }
 
-export function queryGetProductsByCollectionHandle(
-  collectionHandle: string,
-  firstProducts: number = 40,
-) {
-  return `
-{
-  collection(handle: "${collectionHandle}") {
-    products(first: ${firstProducts}) {
+const productNodesData = `
       nodes {
         id
         title
@@ -123,10 +116,36 @@ export function queryGetProductsByCollectionHandle(
           altText
         }
       }
+`
+
+export function queryGetProductsByCollectionHandle(
+  collectionHandle: string,
+  firstProducts: number = 40,
+) {
+  return `
+  {
+    collection(handle: "${collectionHandle}") {
+      products(first: ${firstProducts}) {
+        ${productNodesData}
+      }
+    }
+  }
+  `
+}
+
+export function queryGetProductsByFilterType(
+  collectionHandle: string,
+  firstProducts: number = 40,
+  productType: string,
+) {
+  return `
+{
+  collection(handle: "${collectionHandle}") {
+    products(first: ${firstProducts}, filters: { productType: "${productType}"}) {
+      ${productNodesData}
     }
   }
 }
-
   `
 }
 

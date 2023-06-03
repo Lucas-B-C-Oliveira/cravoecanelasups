@@ -1,6 +1,11 @@
 import { ProductsGrid } from '@/components/product/ProductsGrid'
 import { Pagination } from '@/components/productsPage/Pagination/Pagination'
 import { Sidebar } from '@/components/productsPage/Sidebar/Sidebar'
+import {
+  queryGetProductsByCollectionHandle,
+  queryGetProductsByFilterType,
+} from '@/utils/graphql/querys'
+import { query } from '@/utils/shopify/storefrontApi'
 
 interface ProductsProps {
   params: {
@@ -9,9 +14,15 @@ interface ProductsProps {
 }
 
 export default async function Products({ params }: ProductsProps) {
-  const { query } = params
+  const { query: queryParam } = params
 
-  console.log('query', query)
+  const queryResult = await query(
+    queryGetProductsByFilterType('todos-produtos', 40, 'creatina'),
+  )
+
+  const { nodes } = queryResult?.collection.products
+
+  console.log('nodes', nodes)
 
   return (
     <div
