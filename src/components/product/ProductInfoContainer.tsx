@@ -48,8 +48,6 @@ export function ProductInfoContainer({ productData }: Props) {
   function checkSelect(data: SelectFlavorData, event: any) {
     const { variants, ...restProductData } = productData
 
-    console.log('name', event.target.name)
-
     if (typeof variants === 'undefined') return
 
     const variantSelected: Variants | undefined = variants.find(

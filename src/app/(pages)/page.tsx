@@ -1,8 +1,9 @@
-import { Carousel } from "@/components/Home/carousel/Carousel";
-import { CarouselParceiros } from "@/components/Home/parceiros/CarouselParceiros";
-import { Separator } from "@/components/Separator/Separator";
-import { ProductsGrid } from "@/components/product/ProductsGrid";
+
 import { WhatsappButton } from "@/components/whatsapp/WhatsAppButton";
+import { Carousel } from '@/components/Home/carousel/Carousel'
+import { CarouselParceiros } from '@/components/Home/parceiros/CarouselParceiros'
+import { Separator } from '@/components/Separator/Separator'
+import { ProductsGrid } from '@/components/product/ProductsGrid'
 
 export default async function Home() {
   return (
@@ -33,5 +34,5 @@ export default async function Home() {
         <WhatsappButton />
       </div>
     </div>
-  );
+  )
 }

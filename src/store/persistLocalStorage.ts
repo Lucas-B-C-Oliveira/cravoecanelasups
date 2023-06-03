@@ -28,7 +28,7 @@ export interface ProductStateFrontEndData {
   options: Options[]
 }
 
-type ProductInCart = {
+export type ProductInCart = {
   quantity: number
   variantId: string
   productFrontEndData: ProductStateFrontEndData
