@@ -27,12 +27,7 @@ const buttonsNavigation = [
     name: 'Lojas Físicas',
     icon: <MapPinMainMenuIcon />,
     href: '#physicalStores',
-  },
-  {
-    name: 'Entrar',
-    icon: <UserMainMenuIcon />,
-    href: '/signinAndSignup',
-  },
+  }
 ]
 
 export function ButtonsMainMenu() {
@@ -54,7 +49,7 @@ export function ButtonsMainMenu() {
   function handleHamburguerMenuButton() {
     if (searchTabOpen) openOrCloseSearchTab()
     if (cartsidebarOpen) openOrCloseCartsidebar()
-
+  
     openOrCloseHamburguerMenu()
   }
 

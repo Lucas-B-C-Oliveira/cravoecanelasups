@@ -75,7 +75,7 @@ export const useGlobalState = create<StoreProps>((set) => ({
   hamburguerMenuOpen: false,
   openOrCloseHamburguerMenu: () => {
     set((state) => ({
-      hamburguerMenuOpen: !state.hamburguerMenuOpen,
+      hamburguerMenuOpen: true,
     }))
   },
 

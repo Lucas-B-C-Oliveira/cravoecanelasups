@@ -52,47 +52,49 @@ export async function Footer() {
           <Links key="@cravoecanela" text="@cravoecanela" href="" />,
         ]}
       />
-
-      {/* @ts-expect-error -> Async Server Component */}
-      <LinksList
-        title="Contato"
-        childrens={[
-          <Links
-            key="contato@cravoecanela.com"
-            text="contato@cravoecanela.com"
-            href=""
-          />,
-          <Links key="(67) 9 9128-3214Whats" text="(67) 9 9128-3214" href="" />,
-          <Links key="(67) 9 9128-3214Tel" text="(67) 9 9128-3214" href="" />,
-        ]}
-      />
-
-      {/* @ts-expect-error -> Async Server Component */}
-      <LinksList
-        title="Redes Sociais"
-        childrens={[
-          <Links
-            key="Unidade I: R. Rui Barbosa, 2030."
-            text="Unidade I: R. Rui Barbosa, 2030."
-            href=""
-          />,
-          <Links
-            key="Unidade II: R. Joaquim Murtinho, 2148."
-            text="Unidade II: R. Joaquim Murtinho, 2148."
-            href=""
-          />,
-          <Links
-            key="Unidade III: R. Bahia, 964t"
-            text="Unidade III: R. Bahia, 964t"
-            href=""
-          />,
-          <Links
-            key="Unidade V: Shopping Norte Sul Plaza."
-            text="Unidade V: Shopping Norte Sul Plaza."
-            href=""
-          />,
-        ]}
-      />
+      <div id='contact'>
+        {/* @ts-expect-error -> Async Server Component */}
+        <LinksList
+          title="Contato"
+          childrens={[
+            <Links
+              key="contato@cravoecanela.com"
+              text="contato@cravoecanela.com"
+              href=""
+            />,
+            <Links key="(67) 9 9128-3214Whats" text="(67) 9 9128-3214" href="" />,
+            <Links key="(67) 9 9128-3214Tel" text="(67) 9 9128-3214" href="" />,
+          ]}
+        />
+      </div>
+      <div id="physicalStores">
+        {/* @ts-expect-error -> Async Server Component */}
+        <LinksList
+          title="Redes Sociais"
+          childrens={[
+            <Links
+              key="Unidade I: R. Rui Barbosa, 2030."
+              text="Unidade I: R. Rui Barbosa, 2030."
+              href=""
+            />,
+            <Links
+              key="Unidade II: R. Joaquim Murtinho, 2148."
+              text="Unidade II: R. Joaquim Murtinho, 2148."
+              href=""
+            />,
+            <Links
+              key="Unidade III: R. Bahia, 964t"
+              text="Unidade III: R. Bahia, 964t"
+              href=""
+            />,
+            <Links
+              key="Unidade V: Shopping Norte Sul Plaza."
+              text="Unidade V: Shopping Norte Sul Plaza."
+              href=""
+            />,
+          ]}
+        />
+      </div>
     </div>
   )
 }

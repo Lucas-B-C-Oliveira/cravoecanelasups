@@ -7,8 +7,7 @@ export default async function Home() {
   return (
     <div
       className={`
-    
-    flex flex-col gap-10
+    flex flex-col gap-10 min-[950px]:mt-[7rem]
     `}
     >
       <div>
@@ -23,6 +22,7 @@ export default async function Home() {
         {/* @ts-expect-error -> Async Server Component */}
         <Separator text="Marcas Parceiras" />
         <div>
+          {/* @ts-expect-error -> Async Server Component */}
           <CarouselParceiros />
         </div>
         {/* @ts-expect-error -> Async Server Component */}
