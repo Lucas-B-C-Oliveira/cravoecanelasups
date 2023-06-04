@@ -1,26 +1,26 @@
-import { ProductData } from '@/types'
-
-import { Product } from './Product'
-import { query } from '@/utils/shopify/storefrontApi'
-import { queryGetProductsByCollectionHandle } from '@/utils/graphql/querys'
+import { ProductData } from "@/types";
+import { Product } from "./Product";
+import { query } from "@/utils/shopify/storefrontApi";
+import { queryGetProductsByCollectionHandle } from "@/utils/graphql/querys";
+import PaginatedItems from "./Pagination";
 
 interface Props {
-  collectionHandle: string
+  collectionHandle: string;
 }
 
 export async function ProductsGrid({
-  collectionHandle = 'mais-vendidos',
+  collectionHandle = "mais-vendidos",
 }: Props) {
   const queryResult = await query(
-    queryGetProductsByCollectionHandle(collectionHandle),
-  )
+    queryGetProductsByCollectionHandle(collectionHandle)
+  );
 
-  const { nodes } = queryResult.collection.products
+  const { nodes } = queryResult.collection.products;
 
   // console.log('productsData', nodes)
 
   const products: ProductData[] = nodes.map((product: ProductData) => {
-    const { url, altText } = product?.featuredImage
+    const { url, altText } = product?.featuredImage;
 
     return {
       id: product.id,
@@ -28,43 +28,14 @@ export async function ProductsGrid({
       handle: product.handle,
       description: product.description,
       currencyCode: product?.priceRange?.minVariantPrice.currencyCode,
-      currencySymbol: 'R$',
+      currencySymbol: "R$",
       altText: `${altText}`,
       image: url,
       variants: product.variants?.nodes,
       price: product?.priceRange?.minVariantPrice.amount,
       options: product.options,
-    }
-  })
+    };
+  });
 
-  return (
-    <div
-      className={`
-      flex
-      justify-center
-      `}
-    >
-      <ul
-        role="list"
-        className={`
-
-      flex flex-auto flex-row gap-6  flex-wrap justify-center
-        
-      `}
-      >
-        {products &&
-          products.map((product: ProductData) => {
-            return (
-              <li
-                key={product.id}
-                className="col-span-1 flex flex-col divide-y"
-              >
-                {/* @ts-expect-error -> Async Server Component */}
-                <Product productData={product} />
-              </li>
-            )
-          })} 
-      </ul>
-    </div>
-  )
+  return <PaginatedItems products={products} itemsPerPage={30} />;
 }
