@@ -1,5 +1,6 @@
 import { Footer } from '@/components/Footer/Footer'
 import { Header } from '@/components/Header'
+import { SecondMenu } from '@/components/Home/SecondMenu/SecondMenu'
 import { CartSidebar } from '@/components/MainMenu/CartSidebar/CartSidebar'
 import { HamburguerMenuListTab } from '@/components/MainMenu/HamburguerMenu/HamburguerMenuListTab'
 import { SearchTab } from '@/components/MainMenu/Search/SearchTab'
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             pb-6
           `}
           >
+            <SecondMenu />
             {children}
           </div>
           {/* @ts-expect-error -> Async Server Component */}

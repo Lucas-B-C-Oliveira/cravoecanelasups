@@ -78,7 +78,8 @@ export function ProductInfoContainer({ productData }: Props) {
     }
   }
 
-  function handleLearnMore() {
+  function handleLearnMore(event: any) {
+    event.preventDefault();
     router.push(`/product/${productData.handle}`)
   }
 

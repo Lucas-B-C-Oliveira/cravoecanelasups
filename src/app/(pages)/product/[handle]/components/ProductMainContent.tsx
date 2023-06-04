@@ -52,9 +52,11 @@ export async function ProductMainContent({ productData }: Props) {
         options.map((option: any) => {
           return <SelectVariantOption key={option.name} option={option} />
         })}
-
-      <Buy productData={productData} />
+      <div id="nutrition-table">
+        <Buy productData={productData} />
+      </div>
       <AddToCart productData={productData} />
+
       <p
         className={`
       text-sm font-semibold text-gray-yellow-cc-750

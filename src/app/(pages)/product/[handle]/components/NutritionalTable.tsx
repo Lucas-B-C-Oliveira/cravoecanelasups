@@ -9,10 +9,10 @@ export async function NutritionalTable({ images }: Props) {
   console.log("image", images);
   return (
     <div className={`flex flex-col gap-6`}>
-      <div id="nutrition-table">
-        {/* @ts-expect-error -> Async Server Component */}
-        <Separator text="Tabela Nutricional" />
-      </div>
+
+      {/* @ts-expect-error -> Async Server Component */}
+      <Separator text="Tabela Nutricional" />
+
 
       <div
         className={`
