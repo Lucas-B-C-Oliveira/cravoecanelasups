@@ -63,7 +63,7 @@ export async function ProductsGrid({
                 <Product productData={product} />
               </li>
             )
-          })}
+          })} 
       </ul>
     </div>
   )

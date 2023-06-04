@@ -172,7 +172,7 @@ export default async function Products({ params }: ProductsProps) {
       >
         {/* @ts-expect-error -> Async Server Component */}
         <ProductsGrid collectionHandle="todos-produtos" />
-        <Pagination hasNextPage={true} hasPreviousPage={true} />
+        {/* <Pagination hasNextPage={true} hasPreviousPage={true} /> */}
       </div>
     </div>
   )
