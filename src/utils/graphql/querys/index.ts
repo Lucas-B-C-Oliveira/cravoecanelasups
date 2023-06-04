@@ -86,14 +86,7 @@ export function queryGetProductByHandle(handle: string) {
   `
 }
 
-export function queryGetProductsByCollectionHandle(
-  collectionHandle: string,
-  firstProducts: number = 40,
-) {
-  return `
-{
-  collection(handle: "${collectionHandle}") {
-    products(first: ${firstProducts}) {
+const productNodesData = `
       nodes {
         id
         title
@@ -123,10 +116,45 @@ export function queryGetProductsByCollectionHandle(
           altText
         }
       }
+`
+
+export function queryGetProductsByCollectionHandle(
+  collectionHandle: string,
+  firstProducts: number = 40,
+) {
+  return `
+  {
+    collection(handle: "${collectionHandle}") {
+      products(first: ${firstProducts}) {
+        ${productNodesData}
+      }
+    }
+  }
+  `
+}
+
+export function queryGetProductsByFilters(
+  collectionHandle: string,
+  firstProducts: number = 40,
+  filters: any[],
+) {
+  console.log('newFilterss dentro da query', filters)
+
+  const stringFilters = JSON.stringify(filters)
+
+  const regex = /"([^"]+)"(?=:)/g
+  const modifiedString = stringFilters.replace(regex, '$1')
+
+  console.log('modifiedString', modifiedString)
+
+  return `
+{
+  collection(handle: "${collectionHandle}") {
+    products(first: ${firstProducts}, filters: ${modifiedString}) {
+      ${productNodesData}
     }
   }
 }
-
   `
 }
 

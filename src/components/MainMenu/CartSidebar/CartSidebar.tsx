@@ -1,29 +1,29 @@
-"use client";
+'use client'
 
-import { useGlobalState } from "@/store/globalStore";
-import { usePersistLocalStorage } from "@/store/persistLocalStorage";
-import useStore from "@/store/useStore";
-import { FormatRealValue } from "@/utils/helpers";
-import Image from "next/image";
+import { useGlobalState } from '@/store/globalStore'
+import { usePersistLocalStorage } from '@/store/persistLocalStorage'
+import useStore from '@/store/useStore'
+import { FormatRealValue } from '@/utils/helpers'
+import Image from 'next/image'
 
 export function CartSidebar() {
-  const { cartsidebarOpen } = useGlobalState();
+  const { cartsidebarOpen } = useGlobalState()
 
-  const cartData = useStore(usePersistLocalStorage, (state) => state.cartData);
-  const { openOrCloseCartsidebar } = useGlobalState();
+  const cartData = useStore(usePersistLocalStorage, (state) => state.cartData)
+  const { openOrCloseCartsidebar } = useGlobalState()
   const { addProductById, removeProductQuantityById } = usePersistLocalStorage()
 
   const handleAmoutCartPrice = () => {
-    const amountPrice = calcPrice();
-    return amountPrice?.reduce((el, i) => el + i);
-  };
+    const amountPrice = calcPrice()
+    return amountPrice?.reduce((el, i) => el + i)
+  }
 
   const calcPrice = () => {
-    let price = 0;
+    const price = 0
     return cartData?.map((e) => {
-      return price + e.quantity * parseInt(e.productFrontEndData.price);
-    });
-  };
+      return price + e.quantity * parseInt(e.productFrontEndData.price)
+    })
+  }
   return (
     <>
       {cartsidebarOpen && (
@@ -39,12 +39,13 @@ export function CartSidebar() {
          
        `}
           style={{
-            boxShadow: "rgba(0, 0, 0, 0.19) 0px 20px 30px, rgba(0, 0, 0, 0.23) 0px 10px 20px 20px"
+            boxShadow:
+              'rgba(0, 0, 0, 0.19) 0px 20px 30px, rgba(0, 0, 0, 0.23) 0px 10px 20px 20px',
           }}
         >
-          <div className={"flex w-full max-[750px]:justify-end"}>
+          <div className={'flex w-full max-[750px]:justify-end'}>
             <div
-              className="bg-[yellow] max-[750px]:py-[2px] py-[5px] py-[5px] px-[15px]  font-bold max-[750px]:text-[1rem] text-[2rem] cursor-pointer"
+              className="bg-[yellow] max-[750px]:py-[2px] py-[5px]  px-[15px]  font-bold max-[750px]:text-[1rem] text-[2rem] cursor-pointer"
               onClick={() => openOrCloseCartsidebar()}
             >
               X
@@ -59,7 +60,7 @@ export function CartSidebar() {
             <h1 className="text-[1.5rem] font-bold">Resumo do Pedido</h1>
             <h1 className="text-[1rem] font-semibold ">Subtotal:</h1>
             <h1 className="text-[1.5rem] font-bold">{`R$${FormatRealValue(
-              handleAmoutCartPrice()
+              handleAmoutCartPrice(),
             )}`}</h1>
           </div>
           {cartData?.map((e) => {
@@ -76,15 +77,23 @@ export function CartSidebar() {
                     {e.productFrontEndData.title}
                   </h1>
                   <span>
-                    {e.productFrontEndData.variant.selectedOption.name}:{" "}
+                    {e.productFrontEndData.variant.selectedOption.name}:{' '}
                     {e.productFrontEndData.variant.selectedOption.value}
                   </span>
                   <div className="flex">
-                    <h1 className="text-[1.7rem] bg-[yellow] px-[10px] cursor-pointer font-bold" onClick={() => removeProductQuantityById(e.variantId)}>
+                    <h1
+                      className="text-[1.7rem] bg-[yellow] px-[10px] cursor-pointer font-bold"
+                      onClick={() => removeProductQuantityById(e.variantId)}
+                    >
                       -
                     </h1>
                     <h1 className="text-[1.7rem] px-[1rem]">{e.quantity}</h1>
-                    <h1 className="text-[1.7rem] bg-[yellow] px-[10px] cursor-pointer font-bold" onClick={() => { addProductById(e.variantId) }}>
+                    <h1
+                      className="text-[1.7rem] bg-[yellow] px-[10px] cursor-pointer font-bold"
+                      onClick={() => {
+                        addProductById(e.variantId)
+                      }}
+                    >
                       +
                     </h1>
                   </div>
@@ -92,17 +101,17 @@ export function CartSidebar() {
                     Unidade: {FormatRealValue(e.productFrontEndData.price)}
                   </h1>
                   <h1 className="text-[1rem] font-semibold">
-                    Total:{" "}
+                    Total:{' '}
                     {FormatRealValue(
-                      Number(e.productFrontEndData.price) * Number(e.quantity)
+                      Number(e.productFrontEndData.price) * Number(e.quantity),
                     )}
                   </h1>
                 </div>
               </div>
-            );
+            )
           })}
         </div>
       )}
     </>
-  );
+  )
 }
