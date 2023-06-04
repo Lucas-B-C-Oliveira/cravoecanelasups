@@ -133,7 +133,6 @@ function transformApiDataToProductData(data: any): ProductData[] {
 
 export default async function Products({ params }: ProductsProps) {
   const { clientFilters } = params
-
   const clientFiltersTeste: ClientFilters = {
     checkBoxFilters: {
       price: {

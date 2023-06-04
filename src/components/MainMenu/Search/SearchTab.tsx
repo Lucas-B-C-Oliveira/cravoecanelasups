@@ -21,9 +21,9 @@ export function SearchTab() {
           className={`
           md:text-4xl
           lg:text-4xl lg:py-3
-
+        
           w-full h-fit outline-none font-medium text-xl text-gray-yellow-cc-750 px-3.5 py-3 rounded-lg bg-white focus:outline active:outline outline-2
-
+          z-[10]
           `}
           type="search"
           placeholder="Busque por um produto..."

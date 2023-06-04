@@ -40,6 +40,7 @@ export function HamburguerMenuListTab() {
           lg:flex lg:py-7 lg:gap-8
           xl:hidden
           2xl:hidden
+          z-[10]
           flex gap-4 h-fit w-full bg-gray-yellow-cc-900 flex-col items-center pt-3 pb-2 absolute
       `}
       >

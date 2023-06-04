@@ -4,7 +4,6 @@ import { ImageCarousel } from './ImageCarousel'
 import 'swiper/swiper-bundle.css'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, Mousewheel, Keyboard } from 'swiper'
-import { SecondMenu } from '../SecondMenu/SecondMenu'
 
 interface Props {
   images: string[]
@@ -20,7 +19,6 @@ export function CarouselContainer({ images, imagesMobile }: Props) {
   return (
     <>
       <div className="w-full overflow-hidden absolute inset-x-0 ">
-        <SecondMenu />
         <Swiper
           navigation={true}
           pagination={true}

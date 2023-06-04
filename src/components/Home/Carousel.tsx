@@ -1,9 +1,11 @@
+'use client'
+
 import { queryAdmin } from '@/utils/shopify/adminApi'
 import { ImageCarousel } from './ImageCarousel'
 import { queryMetaObjectByType } from '@/utils/graphql/querys'
 import { CarouselContainer } from './CarouselContainer'
 
-export async function Carousel() {
+export function Carousel() {
   const { metaobjectDefinitionByType } = await queryAdmin(
     queryMetaObjectByType('carrossel_home'),
   )

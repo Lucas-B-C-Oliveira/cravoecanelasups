@@ -109,16 +109,16 @@ export const CheckoutForm = memo(function CheckoutForm() {
   }
 
   return (
-    <div className="flex flex-col gap-3.5">
+    <div className="flex flex-col gap-3.5 w-full min-w-[30vw]">
       <h2 className="text-gray-yellow-cc-900 text-lg font-medium">
         Endereço de Entrega
       </h2>
       <FormProvider {...createAddressForm}>
         <form
           onSubmit={handleSubmit(createAddress)}
-          className="flex flex-col gap-6 w-full max-w-xs items-center"
+          className="flex flex-col gap-6 w-full items-center"
         >
-          <div className="flex flex-col gap-3 w-full max-w-xs items-center">
+          <div className="flex flex-col gap-3 w-full items-center">
             <Form.Field>
               <Form.Label htmlFor="email">E-mail</Form.Label>
               <Form.Input

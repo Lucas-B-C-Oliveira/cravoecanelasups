@@ -32,10 +32,9 @@ export function CartSidebar() {
          sm:flex
          md:flex md:py-7 md:gap-8
          lg:flex lg:py-7 lg:gap-8
-         xl:w-2/5
-         2xl:w-2/5
-         flex gap-4 w-4/5 bg-white flex-col items-center pt-3 pb-[4rem] absolute px-6 right-0 z-50 max-[750px]:w-full
+         flex gap-4 w-[35rem] bg-white flex-col items-center pt-3 pb-[4rem]  px-6 right-0 z-50 max-[750px]:w-full
          shadow-2xl
+         fixed inset-y-0 right-0 z-10 w-64
          
        `}
           style={{

@@ -10,12 +10,12 @@ export function SearchMainMenu() {
       lg:
       xl:flex
       2xl:flex
-
-      hidden items-center justify-between gap-2.5 h-fit w-96 px-3.5 py-3 rounded-lg bg-white focus:outline active:outline outline-2 outline-hard-yellow-cc-500
+      pr-[1rem]
+      hidden items-center justify-between gap-2.5 h-fit w-96 rounded-lg bg-white focus:outline active:outline outline-2 outline-hard-yellow-cc-500
       `}
     >
       <input
-        className="w-full h-fit p-0 border-none  font-medium text-lg text-gray-yellow-cc-750"
+        className="w-full px-4 py-1 rounded-md border-0 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
         type="search"
         placeholder="Busque por um produto..."
       />
