@@ -5,14 +5,12 @@ import { ProductData } from '@/types'
 import { queryGetProductsByFilters } from '@/utils/graphql/querys'
 import { query } from '@/utils/shopify/storefrontApi'
 
-export type PriceFrontEnd = {
-  min: string
-  max: string
-}
-
 type CheckBoxFilters = {
   productType?: string[]
-  price?: PriceFrontEnd
+  price?: {
+    min: string
+    max: string
+  }
 }
 
 type ClientFilters = {
@@ -35,7 +33,7 @@ type ApiFilter = {
   filters: Array<ProductType & Price> | Array<Price> | Array<ProductType>
 }
 
-export interface ProductsProps {
+interface ProductsProps {
   params: {
     clientFilters?: ClientFilters
   }
@@ -133,134 +131,43 @@ function transformApiDataToProductData(data: any): ProductData[] {
   return products
 }
 
-const categoriesMock = [
-  {
-    categoryLabel: 'Top 20',
-    filterValue: 'top-20',
-    checked: false,
-  },
-  {
-    categoryLabel: 'Whey Protein',
-    filterValue: 'whey-protein',
-    checked: false,
-  },
+export default async function Products({ params }: ProductsProps) {
+  const { clientFilters } = params
 
-  {
-    categoryLabel: 'Creatina',
-    filterValue: 'creatina',
-    checked: false,
-  },
-
-  {
-    categoryLabel: 'Proteína',
-    filterValue: 'proteina',
-    checked: false,
-  },
-
-  {
-    categoryLabel: 'Omega 3',
-    filterValue: 'omega3',
-    checked: false,
-  },
-
-  {
-    categoryLabel: 'Hipercalórico',
-    filterValue: 'hipercalorico',
-    checked: false,
-  },
-]
-
-async function filterByParam(query: string) {
-  const productType = (query?.length > 2 ? query?.slice(2) : []) as string[]
   const clientFiltersTeste: ClientFilters = {
     checkBoxFilters: {
       price: {
-        min: query[0] ? query[0] : '',
-        max: query[1],
+        max: '150',
+        min: '100',
       },
-      productType,
+      productType: ['creatina', 'hipercalórico'],
     },
   }
 
   const response = await getProductsByFilters(clientFiltersTeste)
   const products = transformApiDataToProductData(response)
 
-  return products
-}
+  //! TODO: Fazer a paginação aqui => e enviar por props pro componente de paginação
 
-function makeCheckboxFilters(query: string) {
-  const productType = query?.slice(2) as string[]
-
-  const checkBoxFiltersSaved = categoriesMock.map((element) => {
-    const isChecked = productType.some(
-      (el: string) => el === element.filterValue,
-    )
-
-    const newElement = {
-      ...element,
-      checked: isChecked,
-    }
-    return newElement
-  })
-
-  return checkBoxFiltersSaved
-}
-
-function makePriceFilters(query: string) {
-  let minDefault = 200
-  let maxDefault = 900
-
-  if (query?.length > 0) {
-    if (!isNaN(Number(query[0]))) {
-      minDefault = Number(query[0])
-    }
-  }
-
-  if (query?.length > 1) {
-    if (!isNaN(Number(query[1]))) {
-      maxDefault = Number(query[1])
-    }
-  }
-  const priceSaved = {
-    min: minDefault,
-    max: maxDefault,
-  }
-  return priceSaved
-}
-
-function makeFilters(query: string) {
-  const priceSaved = makePriceFilters(query)
-  const checkBoxFiltersSaved =
-    query?.length > 2 ? makeCheckboxFilters(query) : categoriesMock
-
-  return {
-    priceSaved,
-    checkBoxFiltersSaved,
-  }
-}
-
-export default async function Products({ params }: ProductsProps) {
-  const { query } = params
-  const { products } = filterByParam(query)
-  const { priceSaved, checkBoxFiltersSaved } = makeFilters(query)
+  console.log('products', products)
 
   return (
     <div
       className={`
-        flex flex-row gap-6 justify-between pt-6
+      flex flex-row gap-6 justify-between pt-6
+      
       `}
     >
       {/* @ts-expect-error -> Async Server Component */}
-      <Sidebar
-        checkBoxFiltersSaved={checkBoxFiltersSaved}
-        priceSaved={priceSaved}
-      />
+      <Sidebar />
       <div
         className={`
         flex flex-col
         w-full
         h-fit
         gap-6
+        
+      
       `}
       >
         {/* @ts-expect-error -> Async Server Component */}

@@ -1,3 +1,4 @@
+'use client'
 import { ProductImage } from './ProductImage'
 import { ProductData } from '@/types'
 import { ProductInfoContainer } from './ProductInfoContainer'
@@ -6,7 +7,7 @@ interface Props {
   productData: ProductData
 }
 
-export async function Product({ productData }: Props) {
+export function Product({ productData }: Props) {
   const { image, handle, altText } = productData
 
   return (
@@ -25,7 +26,6 @@ export async function Product({ productData }: Props) {
         transform hover:-translate-y-1 hover:shadow-lg
       `}
     >
-      {/* @ts-expect-error -> Async Server Component */}
       <ProductImage imageUrl={image} productHandle={handle} alt={altText} />
 
       <ProductInfoContainer productData={productData} />
