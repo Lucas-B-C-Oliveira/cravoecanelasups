@@ -12,15 +12,15 @@ export function Input(props: InputProps) {
     <input
       id={props.name}
       className={`
-      rounded-lg
-      bg-white
-      px-3.5
-      py-3
-      text-sm text-gray-yellow-cc-750 font-medium
-      shadow-inputs-checkouts-cc
-      shadow-color-inputs-checkout-cc
-      focus:outline-none focus:ring-2 focus:ring-gray-yellow-cc-600
-      outline-none border-0
+        rounded-lg
+        bg-white
+        px-3.5
+        py-3
+        text-sm text-gray-yellow-cc-750 font-medium
+        shadow-inputs-checkouts-cc
+        shadow-color-inputs-checkout-cc
+        focus:outline-none focus:ring-2 focus:ring-gray-yellow-cc-600
+        outline-none border-0
       `}
       {...register(props.name)}
       {...props}

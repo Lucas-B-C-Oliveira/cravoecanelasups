@@ -1,27 +1,17 @@
 import { Breadcrumb } from './Breadcrumb'
-import { CategoriesContent } from './CategoriesContent'
-import { CategoryCheckbox } from './CategoryCheckbox'
-import { PriceContent } from './PriceContent'
-import { SearchContent } from './SearchContent'
+
 import { SidebarClientContainer } from './SidebarClientContainer'
+import { SidebarProvider } from './SidebarProvider'
 
-const categoriesMock = [
-  {
-    categoryLabel: 'Top 20',
-  },
-  {
-    categoryLabel: 'Whey Protein',
-  },
+interface Props {
+  checkBoxFiltersSaved: { categoryLabel: string; filterValue: string }[]
+  priceSaved: {
+    min: number
+    max: number
+  }
+}
 
-  {
-    categoryLabel: 'Creatina',
-  },
-
-  {
-    categoryLabel: 'Proteína',
-  },
-]
-export async function Sidebar() {
+export async function Sidebar(props: Props) {
   return (
     <div
       className={`
@@ -37,9 +27,10 @@ export async function Sidebar() {
       
       `}
     >
-      {/* @ts-expect-error -> Async Server Component */}
-      <Breadcrumb />
-      <SidebarClientContainer />
+      {/* <Breadcrumb /> */}
+      <SidebarProvider>
+        <SidebarClientContainer {...props} />
+      </SidebarProvider>
     </div>
   )
 }
