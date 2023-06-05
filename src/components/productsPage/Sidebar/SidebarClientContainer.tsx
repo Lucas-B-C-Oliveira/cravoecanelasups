@@ -1,153 +1,143 @@
 'use client'
-import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
-import { CategoryCheckbox } from './CategoryCheckbox'
-import { PriceContent } from './PriceContent'
-import { SearchContent } from './SearchContent'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { useFormContext } from 'react-hook-form'
 import { Form } from '@/components/Form'
+import { memo, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { SliderPrice } from './SliderPrice'
 
-type CheckBoxFilters = {
-  productType?: string[]
-  price?: {
-    min: string
-    max: string
+interface Props {
+  checkBoxFiltersSaved: { categoryLabel: string; filterValue: string }[]
+  priceSaved: {
+    min: number
+    max: number
   }
 }
 
-const createFilterSchema = z.object({
-  productType: z.array(z.string()).nullish(),
-  price: z.object({
-    min: z.string(),
-    max: z.string(),
-  }),
-})
+export const SidebarClientContainer = memo(function SidebarClientContainer({
+  checkBoxFiltersSaved,
+  priceSaved,
+}: Props) {
+  const router = useRouter()
+  const { getValues } = useFormContext()
 
-type FilterData = z.infer<typeof createFilterSchema>
+  const [searchContent, setSearchContent] = useState('')
 
-const categoriesMock = [
-  {
-    categoryLabel: 'Top 20',
-    filterValue: 'top-20',
-  },
-  {
-    categoryLabel: 'Whey Protein',
-    filterValue: 'whey-protein',
-  },
+  function handleSendFilters() {
+    const { price, ...rest } = getValues()
 
-  {
-    categoryLabel: 'Creatina',
-    filterValue: 'creatina',
-  },
+    const priceValuesArray = Object.values(price)
 
-  {
-    categoryLabel: 'Proteína',
-    filterValue: 'proteína',
-  },
+    let priceFiltersUrl = ''
+    let priceFiltersContent = ''
+    priceValuesArray.forEach((element) => {
+      priceFiltersUrl = priceFiltersUrl + '/' + `${element}`
+      priceFiltersContent = priceFiltersContent + ' ' + `${element}`
+    })
 
-  {
-    categoryLabel: 'Omega 3',
-    filterValue: 'omega3',
-  },
+    const checkboxFormData = Object.entries(rest)
 
-  {
-    categoryLabel: 'Hipercalórico',
-    filterValue: 'hipercalórico',
-  },
-]
+    let checkboxFiltersUrl = ''
+    let checkboxFiltersContent = ''
 
-export function SidebarClientContainer() {
-  const filterDataForm = useForm<FilterData>({
-    resolver: zodResolver(createFilterSchema),
-  })
+    checkboxFormData.forEach((element: any) => {
+      const isChecked = element[1]
 
-  const {
-    handleSubmit,
-    formState: { isSubmitting },
-    control,
-  } = filterDataForm
+      if (isChecked) {
+        const filterValue = element[0]
+        checkboxFiltersUrl = checkboxFiltersUrl + '/' + filterValue
+        checkboxFiltersContent = checkboxFiltersContent + ' ' + filterValue
+      }
+    })
 
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: 'productType',
-  })
+    // setSearchContent(`${checkboxFiltersContent} ${priceFiltersContent}`)
 
-  function sendFilters(data: FilterData) {}
-
-  function checkBoxHandler(event: any) {
-    const checkBoxValue = event.target.checked
-    const idNumber = Number(event.target.id)
-
-    const filterValue = categoriesMock[idNumber].filterValue
-
-    if (checkBoxValue) {
-      append({ filterValue })
-    } else {
-      console.log('fields', fields)
-      console.log('fields', fields)
-
-      const indexToRemove = fields.findIndex(
-        (obj) => obj?.filterValue === filterValue,
-      )
-      console.log('indexToRemove', indexToRemove)
-      remove(indexToRemove)
-    }
+    router.push(`/products${priceFiltersUrl}/${checkboxFiltersUrl}`)
   }
 
   return (
-    <FormProvider {...filterDataForm}>
-      <form
-        onSubmit={handleSubmit(sendFilters)}
-        className="flex flex-col gap-6 w-full max-w-xs items-center"
-      >
-        <SearchContent />
-
-        <PriceContent />
-
-        <div
+    <div className="flex flex-col gap-6 w-full max-w-xs items-center">
+      <div className=" w-full">
+        {/* <h2
           className={`
-      flex flex-col w-full gap-y-2
-      
+            text-gray-yellow-cc-850
+            font-semibold
+            text-base
+          `}
+        >
+          Conteúdo da Busca:
+        </h2>
+        <p
+          className={`
+              text-gray-yellow-cc-800
+              font-regular
+              text-base
+            `}
+        >
+          {searchContent}
+        </p> */}
+        <button
+          type="button"
+          onClick={handleSendFilters}
+          className={`
+              group whitespace-nowrap  text-base px-2.5 py-1.5
+              flex flex-row  gap-1.5  active:text-hard-yellow-cc-500 hover:text-hard-yellow-cc-500
+              text-gray-yellow-cc-800 font-semibold items-center
+              bg-gradient-to-t from-gradient-yellow-cc-600 from-10% to-gradient-yellow-cc-500 to-90% rounded-lg
+            `}
+        >
+          Buscar Produtos
+          {/* {icon &&
+          cloneElement(icon, {
+            className:
+              'stroke-yellow-cc-200 w-5 h-5 group-hover:stroke-hard-yellow-cc-500 group-active:stroke-hard-yellow-cc-500',
+          })} */}
+        </button>
+      </div>
+
+      <div className="w-full">
+        <h2
+          className={`
+      text-gray-yellow-cc-750 font-medium text-base
       `}
         >
-          <h2
-            className={`
-        text-base text-gray-yellow-cc-750 font-medium
-        `}
-          >
-            Categorias
-          </h2>
-          <div
-            className={`
-        flex flex-col gap-y-1
-      `}
-          >
-            {categoriesMock.length > 0 &&
-              categoriesMock.map((category: any, index: number) => {
-                return (
-                  <>
-                    <Form.Field key={category.categoryLabel}>
-                      <Form.Label htmlFor={category.categoryLabel}>
-                        {category.categoryLabel}
-                      </Form.Label>
-                      <Form.Input
-                        id={`${index}`}
-                        onClick={checkBoxHandler}
-                        type="checkbox"
-                        name={category.categoryLabel}
-                      />
-                    </Form.Field>
+          Preço:
+        </h2>
 
-                    {/* <CategoryCheckbox
-                      key={category.categoryLabel}
-                      textLabel={category.categoryLabel}
-                    /> */}
-                  </>
-                )
-              })}
-          </div>
+        <SliderPrice priceSaved={priceSaved} />
+      </div>
+
+      <div className={`flex flex-col w-full gap-y-2`}>
+        <h2 className={`text-base text-gray-yellow-cc-750 font-medium`}>
+          Categorias
+        </h2>
+        <div className={`flex flex-col gap-y-3`}>
+          {checkBoxFiltersSaved.length > 0 &&
+            checkBoxFiltersSaved.map((category: any, index: number) => {
+              return (
+                <Form.Field
+                  key={category.filterValue}
+                  className="flex flex-row gap-3"
+                >
+                  <Form.Input
+                    className={`
+                      rounded-md bg-white text-gray-yellow-cc-750 w-6 h-6
+                      shadow-inputs-checkouts-cc shadow-color-inputs-checkout-cc
+                      focus:outline-none focus:ring-2 focus:ring-gray-yellow-cc-600
+                      outline-none border-0
+                    `}
+                    id={`${index}`}
+                    defaultChecked={category.checked}
+                    type="checkbox"
+                    name={category.filterValue}
+                  />
+                  <Form.Label htmlFor={category.filterValue}>
+                    {category.categoryLabel}
+                  </Form.Label>
+                </Form.Field>
+              )
+            })}
         </div>
-      </form>
-    </FormProvider>
+      </div>
+    </div>
   )
-}
+})

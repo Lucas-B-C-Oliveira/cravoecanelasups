@@ -138,14 +138,10 @@ export function queryGetProductsByFilters(
   firstProducts: number = 40,
   filters: any[],
 ) {
-  console.log('newFilterss dentro da query', filters)
-
   const stringFilters = JSON.stringify(filters)
 
   const regex = /"([^"]+)"(?=:)/g
   const modifiedString = stringFilters.replace(regex, '$1')
-
-  console.log('modifiedString', modifiedString)
 
   return `
 {

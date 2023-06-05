@@ -35,7 +35,11 @@ export async function Footer() {
       <LinksList
         title="Menu"
         childrens={[
-          <Links key="Produtos" text="Produtos" href="../products/mais-vendidos" />,
+          <Links
+            key="Produtos"
+            text="Produtos"
+            href="../products/mais-vendidos"
+          />,
           // <Links key="Blog" text="Blog" href="" />,
           // <Links key="Entrar" text="Entrar" href="" />,
           <Links key="WHEY PROTEIN" text="WHEY PROTEIN" href="" />,
@@ -52,7 +56,7 @@ export async function Footer() {
           <Links key="@cravoecanela" text="@cravoecanela" href="" />,
         ]}
       />
-      <div id='contact'>
+      <div id="contact">
         {/* @ts-expect-error -> Async Server Component */}
         <LinksList
           title="Contato"
@@ -62,7 +66,11 @@ export async function Footer() {
               text="contato@cravoecanela.com"
               href=""
             />,
-            <Links key="(67) 9 9128-3214Whats" text="(67) 9 9128-3214" href="" />,
+            <Links
+              key="(67) 9 9128-3214Whats"
+              text="(67) 9 9128-3214"
+              href=""
+            />,
             <Links key="(67) 9 9128-3214Tel" text="(67) 9 9128-3214" href="" />,
           ]}
         />

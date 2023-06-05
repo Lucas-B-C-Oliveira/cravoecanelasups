@@ -1,13 +1,14 @@
-import Image from 'next/image'
-import Link from 'next/link'
+"use client";
+import Image from "next/image";
+import Link from "next/link";
 
 interface Props {
-  imageUrl: string
-  alt: string
-  productHandle: string
+  imageUrl: string;
+  alt: string;
+  productHandle: string;
 }
 
-export async function ProductImage({ imageUrl, alt, productHandle }: Props) {
+export function ProductImage({ imageUrl, alt, productHandle }: Props) {
   return (
     <Link
       className=" flex flex-col items-center h-fit w-fit"
@@ -21,5 +22,5 @@ export async function ProductImage({ imageUrl, alt, productHandle }: Props) {
         height={700}
       />
     </Link>
-  )
+  );
 }

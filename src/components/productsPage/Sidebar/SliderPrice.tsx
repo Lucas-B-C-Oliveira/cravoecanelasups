@@ -1,12 +1,34 @@
 import * as Slider from '@radix-ui/react-slider'
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import { PriceLabel } from './PriceLabel'
 import { Minus } from '@/components/Icons'
 import { Plus } from 'phosphor-react'
+import { useFormContext } from 'react-hook-form'
 
-export function SliderPrice() {
-  const [minPrice, setMinPrice] = useState('100,00')
-  const [maxPrice, setMaxPrice] = useState('900,00')
+interface Props {
+  priceSaved: {
+    min: number
+    max: number
+  }
+}
+
+export const SliderPrice = memo(function SliderPrice({ priceSaved }: Props) {
+  const { max: propsPriceMax, min: propsPricemin } = priceSaved
+
+  const defaultPriceMaxString = propsPriceMax.toFixed(2).replace('.', ',')
+  const defaultPriceMinString = propsPricemin.toFixed(2).replace('.', ',')
+
+  const [minPrice, setMinPrice] = useState(defaultPriceMinString)
+  const [maxPrice, setMaxPrice] = useState(defaultPriceMaxString)
+  const { register, setValue } = useFormContext()
+
+  const defaultPriceMax = propsPriceMax
+  const defaultPriceMin = propsPricemin
+
+  setValue('price', {
+    min: Number(minPrice.replace(',', '.')),
+    max: Number(maxPrice.replace(',', '.')),
+  })
 
   function handleSlider(values: number[]) {
     if (values.length > 0) {
@@ -16,6 +38,11 @@ export function SliderPrice() {
 
       if (minPrice !== newPrices[0]) setMinPrice(newPrices[0])
       if (maxPrice !== newPrices[1]) setMaxPrice(newPrices[1])
+
+      setValue('price', {
+        min: values[0],
+        max: values[1],
+      })
     }
   }
 
@@ -32,8 +59,9 @@ export function SliderPrice() {
 
       <Slider.Root
         onValueChange={handleSlider}
+        {...register('price')}
         className="SliderRoot relative flex items-center select-none touch-none w-full h-fit"
-        defaultValue={[100, 900]}
+        defaultValue={[defaultPriceMin, defaultPriceMax]}
         max={1000}
         step={1}
         aria-label="Volume"
@@ -78,4 +106,4 @@ export function SliderPrice() {
       </Slider.Root>
     </div>
   )
-}
+})

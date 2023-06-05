@@ -95,7 +95,7 @@ export function ProductInfoContainer({ productData }: Props) {
           w-full gap-y-2.5
         `}
         >
-          <h3 className="text-lg text-gray-yellow-cc-850 font-semibold">
+          <h3 className="text-lg text-gray-yellow-cc-850 font-semibold w-[13rem]">
             {title}
           </h3>
 
